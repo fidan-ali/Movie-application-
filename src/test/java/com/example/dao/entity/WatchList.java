@@ -1,4 +1,4 @@
-package com.example.demo.entity;
+package com.example.dao.entity;
 
 import jakarta.persistence.*;
 import lombok.*;

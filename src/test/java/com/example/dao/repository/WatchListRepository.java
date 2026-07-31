@@ -1,4 +1,4 @@
-package com.example.demo.repository;
+package com.example.dao.repository;
 
 import com.example.demo.entity.WatchList;
 import com.example.demo.entity.WatchListItem;
