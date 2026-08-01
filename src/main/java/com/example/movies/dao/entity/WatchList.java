@@ -1,4 +1,4 @@
-package com.example.dao.entity;
+package com.example.movies.dao.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
@@ -9,16 +9,17 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-@NoArgsConstructor
-@Setter
-@Getter
-@ToString
-@EqualsAndHashCode(of = "id")
 @Table(name = "watchlists")
+@Getter
+@Setter
+@NoArgsConstructor
+@EqualsAndHashCode(of = "id")
+@ToString(exclude = {"user", "items"})
 public class WatchList {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    Long id;
+    private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
