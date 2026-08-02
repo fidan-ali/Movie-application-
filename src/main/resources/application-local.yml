@@ -1,3 +1,4 @@
 tmdb:
-  api-key: ${TMDB_API_KEY}
-  base-url: https://api.themoviedb.org/3
+  api:
+    base-url: https://api.themoviedb.org
+    key: ${TMDB_API_KEY}

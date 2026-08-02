@@ -1,0 +1,45 @@
+package com.example.movies.client;
+
+import com.example.movies.dto.TmdbGenreResponse;
+import com.example.movies.dto.TmdbMovieDetails;
+import com.example.movies.dto.TmdbMovieResponse;
+import org.springframework.cloud.openfeign.FeignClient;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestParam;
+
+@FeignClient(
+        name = "tmdb-client",
+        url = "${tmdb.api.base-url}"
+)
+public interface TmdbFeignClient {
+
+    @GetMapping("/3/movie/popular")
+    TmdbMovieResponse getPopularMovies(
+            @RequestParam Integer page,
+            @RequestParam("api_key") String apiKey
+    );
+
+    @GetMapping("/3/movie/top_rated")
+    TmdbMovieResponse getTopRatedMovies(
+            @RequestParam Integer page,
+            @RequestParam("api_key") String apiKey
+    );
+
+    @GetMapping("/3/movie/upcoming")
+    TmdbMovieResponse getUpcomingMovies(
+            @RequestParam Integer page,
+            @RequestParam("api_key") String apiKey
+    );
+
+    @GetMapping("/3/movie/{movieId}")
+    TmdbMovieDetails getMovieDetails(
+            @PathVariable Long movieId,
+            @RequestParam("api_key") String apiKey
+    );
+
+    @GetMapping("/3/genre/movie/list")
+    TmdbGenreResponse getGenres(
+            @RequestParam("api_key") String apiKey
+    );
+}
