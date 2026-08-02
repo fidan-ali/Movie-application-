@@ -1,0 +1,36 @@
+<changeSet id="3-create-watchlist-items" author="fidan">
+
+    <createTable tableName="watchlist_items">
+
+        <column name="id" type="BIGSERIAL">
+            <constraints primaryKey="true"/>
+        </column>
+
+        <column name="watchlist_id" type="BIGINT">
+            <constraints nullable="false"/>
+        </column>
+
+        <column name="tmdb_movie_id" type="BIGINT">
+            <constraints nullable="false"/>
+        </column>
+
+        <column name="title" type="VARCHAR(255)">
+            <constraints nullable="false"/>
+        </column>
+
+        <column name="vote_average" type="DOUBLE PRECISION"/>
+
+        <column name="added_at" type="TIMESTAMP">
+            <constraints nullable="false"/>
+        </column>
+
+    </createTable>
+
+    <addForeignKeyConstraint
+            baseTableName="watchlist_items"
+            baseColumnNames="watchlist_id"
+            referencedTableName="watchlists"
+            referencedColumnNames="id"
+            constraintName="fk_watchlist_items_watchlist"/>
+
+</changeSet>
