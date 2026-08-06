@@ -1,13 +1,13 @@
 package com.example.movies.mapper;
 
 import com.example.movies.dao.entity.WatchListItemEntity;
-import com.example.movies.dto.WatchlistItemRequestDto;
-import com.example.movies.dto.WatchlistItemResponseDto;
+import com.example.movies.dto.WatchListItemRequestDto;
+import com.example.movies.dto.WatchListItemResponseDto;
 import org.mapstruct.Mapper;
 
 @Mapper(componentModel = "spring")
 public interface WatchListItemMapper {
-    WatchListItemEntity toEntity(WatchlistItemRequestDto request);
+    WatchListItemEntity toEntity(WatchListItemRequestDto request);
 
-    WatchlistItemResponseDto toResponse(WatchListItemEntity watchListItem);
+    WatchListItemResponseDto toResponse(WatchListItemEntity watchListItem);
 }
