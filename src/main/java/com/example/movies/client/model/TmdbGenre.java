@@ -1,4 +1,4 @@
-package com.example.movies.dto;
+package com.example.movies.client.model;
 
 public record TmdbGenre(
         Integer id,

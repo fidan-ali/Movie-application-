@@ -1,16 +1,19 @@
 package com.example.movies.client;
 
-import com.example.movies.dto.TmdbGenreResponse;
-import com.example.movies.dto.TmdbMovieDetails;
-import com.example.movies.dto.TmdbMovieResponse;
+import com.example.movies.client.config.TmdbErrorDecoder;
+import com.example.movies.client.model.TmdbGenreResponse;
+import com.example.movies.client.model.TmdbMovieDetails;
+import com.example.movies.client.model.TmdbMovieResponse;
 import org.springframework.cloud.openfeign.FeignClient;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 
 @FeignClient(
         name = "tmdb-client",
-        url = "${tmdb.api.base-url}"
+        url = "${tmdb.api.base-url}",
+        configuration = TmdbErrorDecoder.class
 )
 public interface TmdbFeignClient {
 

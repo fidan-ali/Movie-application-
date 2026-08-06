@@ -1,4 +1,4 @@
-package com.example.movies.dto;
+package com.example.movies.client.model;
 
 import java.util.List;
 
@@ -6,10 +6,10 @@ public record TmdbMovieDetails(
         Long id,
         String title,
         String overview,
-        String release_date,
+        String releaseDate,
         Integer runtime,
         List<TmdbGenre> genres,
-        Double vote_average,
-        String poster_path,
-        String backdrop_path
+        Double voteAverage,
+        String posterPath,
+        String backdropPath
 ) {}
