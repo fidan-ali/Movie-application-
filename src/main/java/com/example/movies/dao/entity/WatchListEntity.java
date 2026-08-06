@@ -15,7 +15,7 @@ import java.util.List;
 @NoArgsConstructor
 @EqualsAndHashCode(of = "id")
 @ToString(exclude = {"user", "items"})
-public class WatchList {
+public class WatchListEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -23,7 +23,7 @@ public class WatchList {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
-    private User user;
+    private UserEntity userEntity;
 
     @Column(nullable = false)
     private String name;
@@ -33,6 +33,6 @@ public class WatchList {
     private LocalDateTime createdAt;
 
     @OneToMany(mappedBy = "watchlist", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<WatchListItem> items = new ArrayList<>();
+    private List<WatchListItemEntity> items = new ArrayList<>();
 
 }

@@ -1,6 +1,5 @@
 package com.example.movies.dao.entity;
 
-import com.example.movies.dao.entity.WatchList;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
@@ -17,7 +16,7 @@ import java.util.List;
 @EqualsAndHashCode(of = "id")
 @ToString(exclude = "watchlist")
 @AllArgsConstructor
-public class WatchListItem {
+public class WatchListItemEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -25,7 +24,7 @@ public class WatchListItem {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "watchlist_id", nullable = false)
-    private WatchList watchlist;
+    private WatchListEntity watchlist;
 
     @Column(name = "tmdb_movie_id", nullable = false)
     private Long tmdbMovieId;
