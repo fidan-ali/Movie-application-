@@ -1,9 +1,7 @@
 package com.example.movies;
 
-import com.example.movies.config.TmdbProperties;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.cloud.openfeign.EnableFeignClients;
 
 @SpringBootApplication
