@@ -8,9 +8,9 @@ import java.util.List;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class WatchlistItemPageResponseDto {
+public class WatchListItemPageResponseDto {
     private int page;
     private int totalPages;
     private int totalResults;
-    private List<WatchlistItemResponseDto> items;
+    private List<WatchListItemResponseDto> items;
 }

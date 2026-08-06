@@ -10,7 +10,7 @@ import java.util.List;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class WatchlistItemResponseDto {
+public class WatchListItemResponseDto {
     private Long id;
     private Long watchlistId;
     private Long tmdbMovieId;

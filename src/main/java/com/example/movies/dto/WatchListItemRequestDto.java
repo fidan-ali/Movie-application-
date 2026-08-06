@@ -5,8 +5,9 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
+//@Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class WatchlistRequestDto {
-    private String name;
+public class WatchListItemRequestDto {
+    private Long tmdbMovieId;
 }

@@ -10,5 +10,5 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class WatchlistListResponseDto {
-    private List<WatchlistResponseDto> watchlists;
+    private List<WatchListResponseDto> watchlists;
 }
