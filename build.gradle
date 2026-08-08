@@ -17,7 +17,7 @@ repositories {
 }
 
 ext {
-    set('springCloudVersion', "2025.0.0")
+    set('springCloudVersion', "2023.0.5")
 }
 
 dependencies {
@@ -26,11 +26,14 @@ dependencies {
     implementation 'org.projectlombok:lombok'
     implementation 'org.liquibase:liquibase-core'
     implementation 'org.mapstruct:mapstruct:1.5.5.Final'
+    implementation 'org.springframework.cloud:spring-cloud-starter-openfeign'
+    implementation 'org.springframework.boot:spring-boot-starter-data-redis'
+    implementation 'org.springframework.boot:spring-boot-starter-cache'
     annotationProcessor 'org.projectlombok:lombok'
     annotationProcessor 'org.mapstruct:mapstruct-processor:1.5.5.Final'
     implementation 'org.springframework.boot:spring-boot-starter-validation'
     runtimeOnly 'org.postgresql:postgresql'
-    implementation 'org.springframework.cloud:spring-cloud-starter-openfeign'
+
 
     runtimeOnly 'org.postgresql:postgresql'
 

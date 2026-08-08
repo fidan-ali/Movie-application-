@@ -12,7 +12,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 public class UserResponseDto {
     private Long id;
-    private String firsName;
+    private String firstName;
     private String lastName;
     private String email;
     private LocalDate birthDate;

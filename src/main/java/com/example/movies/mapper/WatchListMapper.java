@@ -15,6 +15,9 @@ public interface WatchListMapper {
 
     WatchListResponseDto toResponse(WatchListEntity watchList);
 
-    @Mapping(target = "watchlists", source = "watchLists")
-    WatchlistListResponseDto toListDto(List<WatchListEntity> watchLists);
+    List<WatchListResponseDto> toResponseList(List<WatchListEntity> watchLists);
+
+    default WatchlistListResponseDto toListDto(List<WatchListEntity> watchLists) {
+        return new WatchlistListResponseDto(toResponseList(watchLists));
+    }
 }

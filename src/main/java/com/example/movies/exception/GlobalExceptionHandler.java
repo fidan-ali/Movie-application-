@@ -6,13 +6,14 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+//Exception handler - arxa planda nece isleyir
 @RestControllerAdvice
 @Slf4j
 public class GlobalExceptionHandler {
     @ResponseStatus(HttpStatus.NOT_FOUND)
     @ExceptionHandler(UserNotFoundException.class)
     public ErrorResponse handleUserNotFound(UserNotFoundException ex) {
-        return buildError("USER_NOT_FOUND", ex.getMessage());
+        return buildError("USER_NOT_FOUND", ex.getMessage()); //magic string
     }
 
     @ResponseStatus(HttpStatus.NOT_FOUND)
