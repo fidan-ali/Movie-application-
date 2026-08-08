@@ -54,7 +54,7 @@ public class UserService {
         userRepository.delete(user);
     }
 
-    public UserResponseDto findById(Long id) {
+    public UserResponseDto getUserById(Long id) {
         UserEntity user = userRepository.findById(id).
                 orElseThrow(() -> new UserNotFoundException(id));
         return userMapper.toResponse(user);

@@ -4,9 +4,9 @@ import com.example.movies.dao.entity.UserEntity;
 import com.example.movies.dao.entity.WatchListEntity;
 import com.example.movies.dao.repository.UserRepository;
 import com.example.movies.dao.repository.WatchListRepository;
-import com.example.movies.dto.WatchlistListResponseDto;
 import com.example.movies.dto.WatchListRequestDto;
 import com.example.movies.dto.WatchListResponseDto;
+import com.example.movies.dto.WatchlistListResponseDto;
 import com.example.movies.exception.DuplicateResourceException;
 import com.example.movies.exception.UserNotFoundException;
 import com.example.movies.exception.WatchlistNotFoundException;
@@ -33,6 +33,7 @@ public class WatchListService {
             throw new DuplicateResourceException("Watchlist", "name", request.getName());
         }
 
+
         WatchListEntity watchList = watchListMapper.toEntity(request);
         watchList.setUserEntity(user);
         WatchListEntity saved = watchListRepository.save(watchList);
@@ -45,7 +46,7 @@ public class WatchListService {
     }
 
     @Transactional
-    public void deleteWatchList(Long id){
+    public void deleteWatchList(Long id) {
         WatchListEntity watchList = watchListRepository.findById(id).
                 orElseThrow(() -> new WatchlistNotFoundException(id));
 

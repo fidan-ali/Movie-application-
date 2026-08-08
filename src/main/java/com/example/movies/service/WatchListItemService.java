@@ -30,10 +30,6 @@ public class WatchListItemService {
     private final WatchListRepository watchListRepository;
     private final WatchListItemMapper watchListItemMapper;
     private final TmdbClientService tmdbClientService;
-    private final TmdbFeignClient tmdbFeignClient;
-
-    @Value("${tmdb.api.key}")
-    private String tmdbApiKey;
 
     @Transactional
     public WatchListItemResponseDto addItemToWatchlist(Long watchListId, WatchListItemRequestDto request) {
@@ -43,7 +39,7 @@ public class WatchListItemService {
             throw new DuplicateResourceException("WatchListItem", "tmdbMovieId", request.getTmdbMovieId());
         }
 
-        TmdbMovieDetails movieDetails = tmdbFeignClient.getMovieDetails(request.getTmdbMovieId(), tmdbApiKey);
+        TmdbMovieDetails movieDetails = tmdbClientService.fetchMovieDetails(request.getTmdbMovieId());
 
         WatchListItemEntity item = buildItem(request, watchList, movieDetails);
 
