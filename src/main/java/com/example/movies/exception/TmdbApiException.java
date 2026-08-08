@@ -1,15 +1,15 @@
 package com.example.movies.exception;
 
-public class TmdbApiException extends RuntimeException {
+import lombok.Getter;
+
+@Getter
+public class TmdbApiException extends LocalizedException {
 
     private final int tmdbStatusCode;
 
-    public TmdbApiException(String message, int tmdbStatusCode, Throwable cause) {
-        super(message, cause);
+    public TmdbApiException(int tmdbStatusCode, Throwable cause) {
+        super("error.tmdb.unavailable");
         this.tmdbStatusCode = tmdbStatusCode;
-    }
-
-    public int getTmdbStatusCode(){
-        return tmdbStatusCode;
+        initCause(cause);
     }
 }

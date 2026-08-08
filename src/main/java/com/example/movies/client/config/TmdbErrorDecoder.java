@@ -1,45 +1,34 @@
+// TmdbErrorDecoder.java
 package com.example.movies.client.config;
 
 import com.example.movies.exception.TmdbApiException;
 import feign.Response;
 import feign.codec.ErrorDecoder;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
+@Slf4j
 @Component
 public class TmdbErrorDecoder implements ErrorDecoder {
 
     @Override
-    public Exception decode(String methodKey, Response response){
+    public Exception decode(String methodKey, Response response) {
         int status = response.status();
 
-        switch(status){
+        switch (status) {
             case 404:
-                return new TmdbApiException(
-                        "Resource not found on TMDB.",
-                        status,
-                        null
-                );
+                log.warn("TMDB 404 on {}: resource not found", methodKey);
+                break;
             case 401:
-                return new TmdbApiException(
-                        "Invalid TMDB API key.",
-                        status,
-                        null
-                );
-
+                log.error("TMDB 401 on {}: invalid API key", methodKey);
+                break;
             case 429:
-                return new TmdbApiException(
-                        "TMDB rate limit exceeded.",
-                        status,
-                        null
-                );
-
+                log.warn("TMDB 429 on {}: rate limit exceeded", methodKey);
+                break;
             default:
-                return new TmdbApiException(
-                        "TMDB request failed.",
-                        status,
-                        null
-                );
+                log.error("TMDB {} on {}: request failed", status, methodKey);
         }
 
+        return new TmdbApiException(status, null);
     }
 }

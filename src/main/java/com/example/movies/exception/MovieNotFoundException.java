@@ -1,7 +1,7 @@
 package com.example.movies.exception;
 
-public class MovieNotFoundException extends RuntimeException{
+public class MovieNotFoundException extends LocalizedException {
     public MovieNotFoundException(Long tmdbId) {
-        super("Movie not found with TMDB id: " + tmdbId);
+        super("error.movie.not-found", tmdbId);
     }
 }

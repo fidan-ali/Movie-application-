@@ -1,7 +1,7 @@
 package com.example.movies.exception;
 
-public class UserNotFoundException extends RuntimeException{
+public class UserNotFoundException extends LocalizedException {
     public UserNotFoundException(Long id) {
-        super("User not found with id: " + id);
+        super("error.user.not-found", id);
     }
 }
