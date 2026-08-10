@@ -12,7 +12,5 @@ import org.springframework.stereotype.Component;
 @Component
 @ConfigurationProperties(prefix = "tmdb.api")
 public class TmdbProperties {
-
-    private String baseUrl;
     private String key;
 }
