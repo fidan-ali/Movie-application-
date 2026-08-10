@@ -46,10 +46,12 @@ public class WatchListService {
     }
 
     @Transactional
-    public void deleteWatchList(Long id) {
+    public void deleteWatchList(Long id, Long userId) {
         WatchListEntity watchList = watchListRepository.findById(id).
                 orElseThrow(() -> new WatchlistNotFoundException(id));
-
+        if (!watchList.getUserEntity().getId().equals(userId)) {
+            throw new WatchlistNotFoundException(id);
+        }
         watchListRepository.delete(watchList);
     }
 

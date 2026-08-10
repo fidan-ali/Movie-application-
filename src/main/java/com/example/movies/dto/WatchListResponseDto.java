@@ -1,4 +1,3 @@
-// WatchListResponseDto.java
 package com.example.movies.dto;
 
 import java.time.LocalDateTime;

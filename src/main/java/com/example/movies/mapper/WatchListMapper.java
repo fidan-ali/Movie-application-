@@ -6,6 +6,7 @@ import com.example.movies.dto.WatchListResponseDto;
 import com.example.movies.dto.WatchlistListResponseDto;
 import org.mapstruct.Mapper;
 
+
 import java.util.List;
 
 @Mapper(componentModel = "spring")
