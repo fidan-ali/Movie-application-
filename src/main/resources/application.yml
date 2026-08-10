@@ -1,14 +1,7 @@
 spring:
-  datasource:
-    url: jdbc:postgresql://localhost:5432/movie_app
-    username: ${DB_USERNAME:postgres}
-    password: ${DB_PASSWORD:postgres}
-    driver-class-name: org.postgresql.Driver
-
   jpa:
     hibernate:
       ddl-auto: validate
-    show-sql: true
 
   liquibase:
     change-log: classpath:db/changelog/db.changelog-master.xml
@@ -17,10 +10,3 @@ spring:
     basename: messages
     encoding: UTF-8
     fallback-to-system-locale: false
-
-  data:
-    redis:
-      host: ${REDIS_HOST:localhost}
-      port: ${REDIS_PORT:6379}
-    cache:
-      type: redis
