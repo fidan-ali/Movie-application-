@@ -7,6 +7,7 @@ import com.example.movies.service.WatchListService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -24,13 +25,23 @@ public class WatchListController {
 
     @PostMapping("/users/{userId}/watchlists")
     @ResponseStatus(HttpStatus.CREATED)
-    public WatchListResponseDto createWatchList(@PathVariable Long userId,
-                                                @Valid @RequestBody WatchListRequestDto request) {
+    public WatchListResponseDto createWatchList(
+            @PathVariable Long userId,
+            @Valid @RequestBody WatchListRequestDto request) {
+
         return watchListService.createWatchList(userId, request);
     }
 
     @GetMapping("/users/{userId}/watchlists")
-    public WatchlistListResponseDto getUserWatchLists(@PathVariable Long userId) {
+    public WatchlistListResponseDto getUserWatchLists(
+            @PathVariable Long userId) {
+
         return watchListService.getUserWatchLists(userId);
+    }
+
+    @DeleteMapping("/watchlists/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void deleteWatchList(@PathVariable Long id) {
+        watchListService.deleteWatchList(id);
     }
 }
