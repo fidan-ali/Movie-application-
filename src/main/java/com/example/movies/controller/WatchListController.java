@@ -27,7 +27,7 @@ public class WatchListController {
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public WatchListResponseDto createWatchList(
-            @RequestHeader("userId") Long userId,
+            @RequestHeader("HEADER_X_USER_ID") Long userId,
             @Valid @RequestBody WatchListRequestDto request) {
 
         return watchListService.createWatchList(userId, request);
@@ -35,7 +35,7 @@ public class WatchListController {
 
     @GetMapping
     public WatchlistListResponseDto getUserWatchLists(
-            @RequestHeader("userId") Long userId) {
+            @RequestHeader("HEADER_X_USER_ID") Long userId) {
 
         return watchListService.getUserWatchLists(userId);
     }
@@ -44,7 +44,7 @@ public class WatchListController {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteWatchList(
             @PathVariable Long id,
-            @RequestHeader("userId") Long userId) {
+            @RequestHeader("HEADER_X_USER_ID") Long userId) {
 
         watchListService.deleteWatchList(id, userId);
     }
