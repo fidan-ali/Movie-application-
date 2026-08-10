@@ -26,7 +26,7 @@ import java.util.List;
 @Setter
 @NoArgsConstructor
 @EqualsAndHashCode(of = "id")
-@ToString(exclude = "watchlists")
+@ToString(exclude = "watchListEntities")
 public class UserEntity {
 
     @Id
