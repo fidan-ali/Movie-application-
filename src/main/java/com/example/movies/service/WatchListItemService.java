@@ -58,7 +58,7 @@ public class WatchListItemService {
         watchListItemRepository.delete(item);
     }
     public WatchListItemPageResponseDto getWatchListItems(Long watchlistId, int page, int pageSize){
-        if(!watchListItemRepository.existsById(watchlistId)) {
+        if(!watchListRepository.existsById(watchlistId)) {
             throw new WatchListItemNotFoundException(watchlistId);
         }
 
