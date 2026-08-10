@@ -1,11 +1,10 @@
 package com.example.movies.mapper;
 
 import com.example.movies.dao.entity.WatchListEntity;
-import com.example.movies.dto.WatchlistListResponseDto;
 import com.example.movies.dto.WatchListRequestDto;
 import com.example.movies.dto.WatchListResponseDto;
+import com.example.movies.dto.WatchlistListResponseDto;
 import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
 
 import java.util.List;
 

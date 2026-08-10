@@ -7,29 +7,30 @@ import com.example.movies.service.WatchListService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.RestController;
 
 @RestController
+@RequestMapping("/api/v1")
 @RequiredArgsConstructor
 public class WatchListController {
-    WatchListService watchListService;
 
-    @PostMapping("/api/v1/users/{userId}/watchlists")
-    public ResponseEntity<WatchListResponseDto> createWatchList(@PathVariable Long userId,
-                                                                @Valid @RequestBody WatchListRequestDto request){
-        WatchListResponseDto response = watchListService.createWatchList(userId, request);
-        return ResponseEntity.status(HttpStatus.CREATED).body(response);
+    private final WatchListService watchListService;
+
+    @PostMapping("/users/{userId}/watchlists")
+    @ResponseStatus(HttpStatus.CREATED)
+    public WatchListResponseDto createWatchList(@PathVariable Long userId,
+                                                @Valid @RequestBody WatchListRequestDto request) {
+        return watchListService.createWatchList(userId, request);
     }
 
-    @GetMapping("GET /api/v1/users/{userId}/watchlists")
-    public ResponseEntity<WatchlistListResponseDto> getUserWatchLists(@PathVariable Long userId){
-        return ResponseEntity.ok(watchListService.getUserWatchLists(userId));
-    }
-
-    @DeleteMapping("/api/v1/watchlists/{id}")
-    public ResponseEntity<Void> deleteWatchList(@PathVariable Long id) {
-        watchListService.deleteWatchList(id);
-        return ResponseEntity.noContent().build();
+    @GetMapping("/users/{userId}/watchlists")
+    public WatchlistListResponseDto getUserWatchLists(@PathVariable Long userId) {
+        return watchListService.getUserWatchLists(userId);
     }
 }

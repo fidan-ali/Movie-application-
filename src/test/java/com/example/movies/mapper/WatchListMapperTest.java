@@ -9,7 +9,14 @@ import org.mapstruct.factory.Mappers;
 
 import java.util.List;
 
-import static com.example.movies.constant.MovieApiTestConstants.*;
+import static com.example.movies.constant.MovieApiTestConstants.FIRST_INDEX;
+import static com.example.movies.constant.MovieApiTestConstants.ID;
+import static com.example.movies.constant.MovieApiTestConstants.ITEM_ID_1;
+import static com.example.movies.constant.MovieApiTestConstants.ITEM_ID_2;
+import static com.example.movies.constant.MovieApiTestConstants.SECOND_INDEX;
+import static com.example.movies.constant.MovieApiTestConstants.SECOND_WATCH_LIST_NAME;
+import static com.example.movies.constant.MovieApiTestConstants.TWO;
+import static com.example.movies.constant.MovieApiTestConstants.WATCH_LIST_NAME;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class WatchListMapperTest {

@@ -23,7 +23,9 @@ import static com.example.movies.constant.MovieApiTestConstants.ID;
 import static com.example.movies.constant.MovieApiTestConstants.WATCH_LIST_NAME;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoInteractions;
+import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 public class WatchListServiceTest {

@@ -1,7 +1,6 @@
 package com.example.movies.dao.repository;
 
 
-import com.example.movies.dao.entity.UserEntity;
 import com.example.movies.dao.entity.WatchListEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 
