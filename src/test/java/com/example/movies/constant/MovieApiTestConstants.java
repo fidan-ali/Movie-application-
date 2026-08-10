@@ -2,7 +2,7 @@ package com.example.movies.constant;
 
 import java.time.LocalDate;
 
-public class MovieApiTestConstants {
+public final class MovieApiTestConstants {
     public static Long ID = 1L;
     public static String EMAIL = "test@gmail.com";
     public static String WATCH_LIST_NAME = "My Movies";
