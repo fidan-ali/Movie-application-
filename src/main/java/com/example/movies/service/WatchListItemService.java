@@ -1,7 +1,6 @@
 package com.example.movies.service;
 
 import com.example.movies.client.TmdbClientService;
-import com.example.movies.client.TmdbFeignClient;
 import com.example.movies.client.model.TmdbGenre;
 import com.example.movies.client.model.TmdbMovieDetails;
 import com.example.movies.dao.entity.WatchListEntity;
@@ -17,7 +16,6 @@ import com.example.movies.exception.WatchlistNotFoundException;
 import com.example.movies.mapper.WatchListItemMapper;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -91,12 +89,7 @@ public class WatchListItemService {
                 .map(watchListItemMapper::toResponse)
                 .toList();
 
-        WatchListItemPageResponseDto response = new WatchListItemPageResponseDto();
-        response.setPage(page);
-        response.setTotalPages(totalPages);
-        response.setTotalResults(totalResults);
-        response.setItems(pageItems);
-        return response;
+        return new WatchListItemPageResponseDto(page, totalPages, totalResults, pageItems);
     }
 
 }

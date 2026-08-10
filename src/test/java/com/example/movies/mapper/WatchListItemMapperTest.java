@@ -8,7 +8,11 @@ import org.mapstruct.factory.Mappers;
 
 import java.util.List;
 
-import static com.example.movies.constant.MovieApiTestConstants.*;
+import static com.example.movies.constant.MovieApiTestConstants.ID;
+import static com.example.movies.constant.MovieApiTestConstants.MOVIE_GENRE;
+import static com.example.movies.constant.MovieApiTestConstants.MOVIE_TITLE;
+import static com.example.movies.constant.MovieApiTestConstants.MOVIE_VOTE_AVERAGE;
+import static com.example.movies.constant.MovieApiTestConstants.TMDB_MOVIE_ID;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class WatchListItemMapperTest {
@@ -50,27 +54,27 @@ class WatchListItemMapperTest {
 
         assertEquals(
                 ID,
-                result.getId()
+                result.id()
         );
 
         assertEquals(
                 TMDB_MOVIE_ID,
-                result.getTmdbMovieId()
+                result.tmdbMovieId()
         );
 
         assertEquals(
                 MOVIE_TITLE,
-                result.getTitle()
+                result.title()
         );
 
         assertEquals(
                 List.of(MOVIE_GENRE),
-                result.getGenres()
+                result.genres()
         );
 
         assertEquals(
                 MOVIE_VOTE_AVERAGE,
-                result.getVoteAverage()
+                result.voteAverage()
         );
     }
 }

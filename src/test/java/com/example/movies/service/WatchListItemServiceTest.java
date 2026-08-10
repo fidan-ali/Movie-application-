@@ -23,7 +23,25 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.util.List;
 import java.util.Optional;
 
-import static com.example.movies.constant.MovieApiTestConstants.*;
+import static com.example.movies.constant.MovieApiTestConstants.ANOTHER_WATCHLIST_ID;
+import static com.example.movies.constant.MovieApiTestConstants.FIRST_PAGE;
+import static com.example.movies.constant.MovieApiTestConstants.GENRE_ID;
+import static com.example.movies.constant.MovieApiTestConstants.ID;
+import static com.example.movies.constant.MovieApiTestConstants.ITEM_ID_1;
+import static com.example.movies.constant.MovieApiTestConstants.ITEM_ID_2;
+import static com.example.movies.constant.MovieApiTestConstants.ITEM_ID_3;
+import static com.example.movies.constant.MovieApiTestConstants.LARGE_PAGE_SIZE;
+import static com.example.movies.constant.MovieApiTestConstants.MOVIE_BACKDROP_PATH;
+import static com.example.movies.constant.MovieApiTestConstants.MOVIE_GENRE;
+import static com.example.movies.constant.MovieApiTestConstants.MOVIE_OVERVIEW;
+import static com.example.movies.constant.MovieApiTestConstants.MOVIE_POSTER_PATH;
+import static com.example.movies.constant.MovieApiTestConstants.MOVIE_RELEASE_DATE;
+import static com.example.movies.constant.MovieApiTestConstants.MOVIE_RUNTIME;
+import static com.example.movies.constant.MovieApiTestConstants.MOVIE_TITLE;
+import static com.example.movies.constant.MovieApiTestConstants.MOVIE_VOTE_AVERAGE;
+import static com.example.movies.constant.MovieApiTestConstants.PAGE_SIZE;
+import static com.example.movies.constant.MovieApiTestConstants.SECOND_PAGE;
+import static com.example.movies.constant.MovieApiTestConstants.TMDB_MOVIE_ID;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.any;
@@ -84,9 +102,7 @@ class WatchListItemServiceTest {
         item.setId(ID);
 
         WatchListItemResponseDto responseDto =
-                new WatchListItemResponseDto();
-        responseDto.setId(ID);
-        responseDto.setTitle(MOVIE_TITLE);
+                new WatchListItemResponseDto(ID, null, null, MOVIE_TITLE, null, null, null);
 
         when(watchListRepository.findById(ID))
                 .thenReturn(Optional.of(watchList));
@@ -113,8 +129,8 @@ class WatchListItemServiceTest {
         WatchListItemResponseDto result =
                 service.addItemToWatchlist(ID, request);
 
-        assertEquals(ID, result.getId());
-        assertEquals(MOVIE_TITLE, result.getTitle());
+        assertEquals(ID, result.id());
+        assertEquals(MOVIE_TITLE, result.title());
 
         assertEquals(watchList, item.getWatchlist());
         assertEquals(MOVIE_TITLE, item.getTitle());
@@ -294,12 +310,10 @@ class WatchListItemServiceTest {
                 List.of(item1, item2);
 
         WatchListItemResponseDto dto1 =
-                new WatchListItemResponseDto();
-        dto1.setId(ITEM_ID_1);
+                new WatchListItemResponseDto(ITEM_ID_1, null, null, null, null, null, null);
 
         WatchListItemResponseDto dto2 =
-                new WatchListItemResponseDto();
-        dto2.setId(ITEM_ID_2);
+                new WatchListItemResponseDto(ITEM_ID_2, null, null, null, null, null, null);
 
         when(watchListItemRepository.existsById(ID))
                 .thenReturn(true);
@@ -322,22 +336,22 @@ class WatchListItemServiceTest {
 
         assertEquals(
                 FIRST_PAGE,
-                result.getPage()
+                result.page()
         );
 
         assertEquals(
                 FIRST_PAGE,
-                result.getTotalPages()
+                result.totalPages()
         );
 
         assertEquals(
                 ITEM_ID_2,
-                result.getTotalResults()
+                result.totalResults()
         );
 
         assertEquals(
                 List.of(dto1, dto2),
-                result.getItems()
+                result.items()
         );
 
         verify(watchListItemRepository)
@@ -373,8 +387,7 @@ class WatchListItemServiceTest {
                 List.of(item1, item2, item3);
 
         WatchListItemResponseDto dto3 =
-                new WatchListItemResponseDto();
-        dto3.setId(ITEM_ID_3);
+                new WatchListItemResponseDto(ITEM_ID_3, null, null, null, null, null, null);
 
         when(watchListItemRepository.existsById(ID))
                 .thenReturn(true);
@@ -394,22 +407,22 @@ class WatchListItemServiceTest {
 
         assertEquals(
                 SECOND_PAGE,
-                result.getPage()
+                result.page()
         );
 
         assertEquals(
                 SECOND_PAGE,
-                result.getTotalPages()
+                result.totalPages()
         );
 
         assertEquals(
                 ITEM_ID_3,
-                result.getTotalResults()
+                result.totalResults()
         );
 
         assertEquals(
                 List.of(dto3),
-                result.getItems()
+                result.items()
         );
     }
 
