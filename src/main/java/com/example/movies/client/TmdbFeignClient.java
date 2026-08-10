@@ -1,6 +1,7 @@
 package com.example.movies.client;
 
 import com.example.movies.client.config.TmdbErrorDecoder;
+import com.example.movies.client.config.TmdbFeignConfig;
 import com.example.movies.client.model.TmdbGenreResponse;
 import com.example.movies.client.model.TmdbMovieDetails;
 import com.example.movies.client.model.TmdbMovieResponse;
@@ -14,7 +15,7 @@ import static com.example.movies.client.TmdbApiConstants.API_KEY;
 @FeignClient(
         name = "tmdb-client",
         url = "${tmdb.api.base-url}",
-        configuration = TmdbErrorDecoder.class
+        configuration = TmdbFeignConfig.class
 )
 public interface TmdbFeignClient {
 
