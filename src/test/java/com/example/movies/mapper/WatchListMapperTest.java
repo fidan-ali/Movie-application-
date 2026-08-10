@@ -28,9 +28,7 @@ class WatchListMapperTest {
     void shouldMapRequestDtoToEntity() {
 
         WatchListRequestDto request =
-                new WatchListRequestDto();
-
-        request.setName(WATCH_LIST_NAME);
+                new WatchListRequestDto(WATCH_LIST_NAME);
 
         WatchListEntity result =
                 mapper.toEntity(request);
@@ -55,12 +53,12 @@ class WatchListMapperTest {
 
         assertEquals(
                 ID,
-                result.getId()
+                result.id()
         );
 
         assertEquals(
                 WATCH_LIST_NAME,
-                result.getName()
+                result.name()
         );
     }
 
@@ -92,22 +90,22 @@ class WatchListMapperTest {
 
         assertEquals(
                 ITEM_ID_1,
-                result.get(FIRST_INDEX).getId()
+                result.get(FIRST_INDEX).id()
         );
 
         assertEquals(
                 WATCH_LIST_NAME,
-                result.get(FIRST_INDEX).getName()
+                result.get(FIRST_INDEX).name()
         );
 
         assertEquals(
                 ITEM_ID_2,
-                result.get(SECOND_INDEX).getId()
+                result.get(SECOND_INDEX).id()
         );
 
         assertEquals(
                 SECOND_WATCH_LIST_NAME,
-                result.get(SECOND_INDEX).getName()
+                result.get(SECOND_INDEX).name()
         );
     }
 
@@ -134,35 +132,35 @@ class WatchListMapperTest {
 
         assertEquals(
                 TWO,
-                result.getWatchlists().size()
+                result.watchlists().size()
         );
 
         assertEquals(
                 ITEM_ID_1,
-                result.getWatchlists()
+                result.watchlists()
                         .get(FIRST_INDEX)
-                        .getId()
+                        .id()
         );
 
         assertEquals(
                 WATCH_LIST_NAME,
-                result.getWatchlists()
+                result.watchlists()
                         .get(FIRST_INDEX)
-                        .getName()
+                        .name()
         );
 
         assertEquals(
                 ITEM_ID_2,
-                result.getWatchlists()
+                result.watchlists()
                         .get(SECOND_INDEX)
-                        .getId()
+                        .id()
         );
 
         assertEquals(
                 SECOND_WATCH_LIST_NAME,
-                result.getWatchlists()
+                result.watchlists()
                         .get(SECOND_INDEX)
-                        .getName()
+                        .name()
         );
     }
 }

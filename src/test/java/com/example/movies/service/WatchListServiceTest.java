@@ -9,8 +9,8 @@ import com.example.movies.dto.WatchListResponseDto;
 import com.example.movies.dto.WatchlistListResponseDto;
 import com.example.movies.exception.DuplicateResourceException;
 import com.example.movies.exception.UserNotFoundException;
+import com.example.movies.exception.WatchlistNotFoundException;
 import com.example.movies.mapper.WatchListMapper;
-import com.example.movies.service.WatchListService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -24,6 +24,8 @@ import static com.example.movies.constant.MovieApiTestConstants.ID;
 import static com.example.movies.constant.MovieApiTestConstants.WATCH_LIST_NAME;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.when;
@@ -150,14 +152,52 @@ public class WatchListServiceTest {
 
     @Test
     void shouldDeleteWatchList() {
+        UserEntity user = new UserEntity();
+        user.setId(ID);
+
         WatchListEntity watchList = new WatchListEntity();
         watchList.setId(ID);
+        watchList.setUserEntity(user);
 
         when(watchListRepository.findById(ID))
                 .thenReturn(Optional.of(watchList));
 
-        service.deleteWatchList(watchList.getId());
+        service.deleteWatchList(watchList.getId(), ID);
 
         verify(watchListRepository).delete(watchList);
+    }
+    @Test
+    void shouldThrowWatchlistNotFoundExceptionWhenWatchlistDoesNotExist() {
+        when(watchListRepository.findById(ID))
+                .thenReturn(Optional.empty());
+
+        assertThrows(
+                WatchlistNotFoundException.class,
+                () -> service.deleteWatchList(ID, ID)
+        );
+
+        verify(watchListRepository, never()).delete(any());
+    }
+
+    @Test
+    void shouldThrowWatchlistNotFoundExceptionWhenUserDoesNotOwnWatchlist() {
+        UserEntity owner = new UserEntity();
+        owner.setId(ID);
+
+        Long otherUserId = 2L;
+
+        WatchListEntity watchList = new WatchListEntity();
+        watchList.setId(ID);
+        watchList.setUserEntity(owner);
+
+        when(watchListRepository.findById(ID))
+                .thenReturn(Optional.of(watchList));
+
+        assertThrows(
+                WatchlistNotFoundException.class,
+                () -> service.deleteWatchList(ID, otherUserId)
+        );
+
+        verify(watchListRepository, never()).delete(any());
     }
 }

@@ -32,11 +32,8 @@ class UserMapperTest {
     @Test
     void shouldMapRequestDtoToEntity() {
 
-        UserRequestDto request = new UserRequestDto();
-        request.setFirstName(FIRST_NAME);
-        request.setLastName(LAST_NAME);
-        request.setEmail(EMAIL);
-        request.setBirthDate(BIRTH_DATE);
+        UserRequestDto request =
+                new UserRequestDto(FIRST_NAME, LAST_NAME, EMAIL, BIRTH_DATE);
 
         UserEntity result = mapper.toEntity(request);
 
@@ -58,11 +55,11 @@ class UserMapperTest {
 
         UserResponseDto result = mapper.toResponse(user);
 
-        assertEquals(ID, result.getId());
-        assertEquals(FIRST_NAME, result.getFirstName());
-        assertEquals(LAST_NAME, result.getLastName());
-        assertEquals(EMAIL, result.getEmail());
-        assertEquals(BIRTH_DATE, result.getBirthDate());
+        assertEquals(ID, result.id());
+        assertEquals(FIRST_NAME, result.firstName());
+        assertEquals(LAST_NAME, result.lastName());
+        assertEquals(EMAIL, result.email());
+        assertEquals(BIRTH_DATE, result.birthDate());
     }
 
     @Test
@@ -89,10 +86,10 @@ class UserMapperTest {
 
         assertEquals(TWO, result.size());
 
-        assertEquals(ITEM_ID_1, result.get(FIRST_INDEX).getId());
-        assertEquals(FIRST_NAME, result.get(FIRST_INDEX).getFirstName());
+        assertEquals(ITEM_ID_1, result.get(FIRST_INDEX).id());
+        assertEquals(FIRST_NAME, result.get(FIRST_INDEX).firstName());
 
-        assertEquals(ITEM_ID_2, result.get(SECOND_INDEX).getId());
-        assertEquals(SECOND_FIRST_NAME, result.get(SECOND_INDEX).getFirstName());
+        assertEquals(ITEM_ID_2, result.get(SECOND_INDEX).id());
+        assertEquals(SECOND_FIRST_NAME, result.get(SECOND_INDEX).firstName());
     }
 }
