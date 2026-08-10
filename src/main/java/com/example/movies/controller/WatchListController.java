@@ -13,16 +13,18 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
+@RequestMapping("/api/v1/watchlists")
 @RequiredArgsConstructor
 public class WatchListController {
 
     private final WatchListService watchListService;
 
-    @PostMapping("/watchlists")
+    @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public WatchListResponseDto createWatchList(
             @RequestHeader("userId") Long userId,
@@ -31,14 +33,14 @@ public class WatchListController {
         return watchListService.createWatchList(userId, request);
     }
 
-    @GetMapping("/watchlists")
+    @GetMapping
     public WatchlistListResponseDto getUserWatchLists(
             @RequestHeader("userId") Long userId) {
 
         return watchListService.getUserWatchLists(userId);
     }
 
-    @DeleteMapping("/watchlists/{id}")
+    @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteWatchList(
             @PathVariable Long id,
