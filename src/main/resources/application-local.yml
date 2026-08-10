@@ -20,3 +20,5 @@ tmdb:
   api:
     base-url: https://api.themoviedb.org
     key: ${TMDB_API_KEY}
+server:
+  port: 8084
