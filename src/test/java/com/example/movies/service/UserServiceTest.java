@@ -39,15 +39,14 @@ public class UserServiceTest {
         UserEntity entity = new UserEntity();
         entity.setId(ID);
 
-        UserResponseDto dto = new UserResponseDto();
-        dto.setId(ID);
+        UserResponseDto dto = new UserResponseDto(ID, null, null, null, null, null);
 
         when(repository.findById(ID)).thenReturn(Optional.of(entity));
         when(mapper.toResponse(entity)).thenReturn(dto);
 
         UserResponseDto result = service.getUserById(ID);
 
-        assertEquals(ID, result.getId());
+        assertEquals(ID, result.id());
     }
 
     @Test
@@ -68,8 +67,7 @@ public class UserServiceTest {
         UserEntity saved = new UserEntity();
         saved.setId(ID);
 
-        UserResponseDto dto = new UserResponseDto();
-        dto.setId(ID);
+        UserResponseDto dto = new UserResponseDto(ID, null, null, null, null, null);
 
         when(repository.existsByEmail(request.getEmail())).thenReturn((false));
         when(mapper.toEntity(request)).thenReturn(entity);
@@ -77,7 +75,7 @@ public class UserServiceTest {
         when(mapper.toResponse(saved)).thenReturn(dto);
         UserResponseDto result = service.createUser(request);
 
-        assertEquals(ID, result.getId());
+        assertEquals(ID, result.id());
 
     }
 
@@ -101,8 +99,7 @@ public class UserServiceTest {
         UserEntity entity = new UserEntity();
         entity.setId(ID);
 
-        UserResponseDto dto = new UserResponseDto();
-        dto.setId(ID);
+        UserResponseDto dto = new UserResponseDto(ID, null, null, null, null, null);
 
         when(repository.findById(ID)).thenReturn(Optional.of(entity));
         when(repository.existsByEmailAndIdNot(request.getEmail(), ID)).thenReturn(false);
@@ -111,7 +108,7 @@ public class UserServiceTest {
 
         UserResponseDto result = service.updateUser(ID, request);
 
-        assertEquals(ID, result.getId());
+        assertEquals(ID, result.id());
     }
 
     @Test
@@ -167,7 +164,7 @@ public class UserServiceTest {
 
         List<UserEntity> entities = List.of(new UserEntity());
 
-        List<UserResponseDto> dtos = List.of(new UserResponseDto());
+        List<UserResponseDto> dtos = List.of(new UserResponseDto(ID, null, null, null, null, null));
 
         when(repository.findAll())
                 .thenReturn(entities);

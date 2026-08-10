@@ -8,7 +8,20 @@ import org.mapstruct.factory.Mappers;
 
 import java.util.List;
 
-import static com.example.movies.constant.MovieApiTestConstants.*;
+import static com.example.movies.constant.MovieApiTestConstants.BIRTH_DATE;
+import static com.example.movies.constant.MovieApiTestConstants.EMAIL;
+import static com.example.movies.constant.MovieApiTestConstants.FIRST_INDEX;
+import static com.example.movies.constant.MovieApiTestConstants.FIRST_NAME;
+import static com.example.movies.constant.MovieApiTestConstants.ID;
+import static com.example.movies.constant.MovieApiTestConstants.ITEM_ID_1;
+import static com.example.movies.constant.MovieApiTestConstants.ITEM_ID_2;
+import static com.example.movies.constant.MovieApiTestConstants.LAST_NAME;
+import static com.example.movies.constant.MovieApiTestConstants.SECOND_BIRTH_DATE;
+import static com.example.movies.constant.MovieApiTestConstants.SECOND_EMAIL;
+import static com.example.movies.constant.MovieApiTestConstants.SECOND_FIRST_NAME;
+import static com.example.movies.constant.MovieApiTestConstants.SECOND_INDEX;
+import static com.example.movies.constant.MovieApiTestConstants.SECOND_LAST_NAME;
+import static com.example.movies.constant.MovieApiTestConstants.TWO;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class UserMapperTest {
