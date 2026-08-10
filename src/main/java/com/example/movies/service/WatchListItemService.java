@@ -12,7 +12,7 @@ import com.example.movies.dto.WatchListItemRequestDto;
 import com.example.movies.dto.WatchListItemResponseDto;
 import com.example.movies.exception.DuplicateResourceException;
 import com.example.movies.exception.WatchListItemNotFoundException;
-import com.example.movies.exception.WatchlistNotFoundException;
+import com.example.movies.exception.WatchListNotFoundException;
 import com.example.movies.mapper.WatchListItemMapper;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -32,7 +32,7 @@ public class WatchListItemService {
     @Transactional
     public WatchListItemResponseDto addItemToWatchlist(Long watchListId, WatchListItemRequestDto request) {
         WatchListEntity watchList = watchListRepository.findById(watchListId).
-                orElseThrow(() -> new WatchlistNotFoundException(watchListId));
+                orElseThrow(() -> new WatchListNotFoundException(watchListId));
         if (watchListItemRepository.existsByWatchlistIdAndTmdbMovieId(watchListId, request.getTmdbMovieId())) {
             throw new DuplicateResourceException("WatchListItem", "tmdbMovieId", request.getTmdbMovieId());
         }
@@ -59,7 +59,7 @@ public class WatchListItemService {
     }
     public WatchListItemPageResponseDto getWatchListItems(Long watchlistId, int page, int pageSize){
         if(!watchListRepository.existsById(watchlistId)) {
-            throw new WatchListItemNotFoundException(watchlistId);
+            throw new WatchListNotFoundException(watchlistId);
         }
 
         List<WatchListItemEntity> allItems = watchListItemRepository.findAllByWatchlistId(watchlistId);

@@ -33,8 +33,8 @@ public class GlobalExceptionHandler {
     }
 
     @ResponseStatus(HttpStatus.NOT_FOUND)
-    @ExceptionHandler(WatchlistNotFoundException.class)
-    public ErrorResponse handleWatchlistNotFoundException(WatchlistNotFoundException ex) {
+    @ExceptionHandler(WatchListNotFoundException.class)
+    public ErrorResponse handleWatchlistNotFoundException(WatchListNotFoundException ex) {
         return buildError("WATCHLIST_NOT_FOUND", ex);
     }
 

@@ -9,7 +9,7 @@ import com.example.movies.dto.WatchListResponseDto;
 import com.example.movies.dto.WatchlistListResponseDto;
 import com.example.movies.exception.DuplicateResourceException;
 import com.example.movies.exception.UserNotFoundException;
-import com.example.movies.exception.WatchlistNotFoundException;
+import com.example.movies.exception.WatchListNotFoundException;
 import com.example.movies.mapper.WatchListMapper;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -48,9 +48,9 @@ public class WatchListService {
     @Transactional
     public void deleteWatchList(Long id, Long userId) {
         WatchListEntity watchList = watchListRepository.findById(id).
-                orElseThrow(() -> new WatchlistNotFoundException(id));
+                orElseThrow(() -> new WatchListNotFoundException(id));
         if (!watchList.getUserEntity().getId().equals(userId)) {
-            throw new WatchlistNotFoundException(id);
+            throw new WatchListNotFoundException(id);
         }
         watchListRepository.delete(watchList);
     }

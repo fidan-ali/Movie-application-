@@ -12,7 +12,7 @@ import com.example.movies.dto.WatchListItemRequestDto;
 import com.example.movies.dto.WatchListItemResponseDto;
 import com.example.movies.exception.DuplicateResourceException;
 import com.example.movies.exception.WatchListItemNotFoundException;
-import com.example.movies.exception.WatchlistNotFoundException;
+import com.example.movies.exception.WatchListNotFoundException;
 import com.example.movies.mapper.WatchListItemMapper;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -171,7 +171,7 @@ class WatchListItemServiceTest {
                 .thenReturn(Optional.empty());
 
         assertThrows(
-                WatchlistNotFoundException.class,
+                WatchListNotFoundException.class,
                 () -> service.addItemToWatchlist(ID, request)
         );
 

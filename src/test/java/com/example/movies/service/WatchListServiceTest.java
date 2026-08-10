@@ -9,7 +9,7 @@ import com.example.movies.dto.WatchListResponseDto;
 import com.example.movies.dto.WatchlistListResponseDto;
 import com.example.movies.exception.DuplicateResourceException;
 import com.example.movies.exception.UserNotFoundException;
-import com.example.movies.exception.WatchlistNotFoundException;
+import com.example.movies.exception.WatchListNotFoundException;
 import com.example.movies.mapper.WatchListMapper;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -172,7 +172,7 @@ public class WatchListServiceTest {
                 .thenReturn(Optional.empty());
 
         assertThrows(
-                WatchlistNotFoundException.class,
+                WatchListNotFoundException.class,
                 () -> service.deleteWatchList(ID, ID)
         );
 
@@ -194,7 +194,7 @@ public class WatchListServiceTest {
                 .thenReturn(Optional.of(watchList));
 
         assertThrows(
-                WatchlistNotFoundException.class,
+                WatchListNotFoundException.class,
                 () -> service.deleteWatchList(ID, otherUserId)
         );
 
