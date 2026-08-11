@@ -5,12 +5,15 @@ import com.example.movies.dto.WatchListRequestDto;
 import com.example.movies.dto.WatchListResponseDto;
 import com.example.movies.dto.WatchlistListResponseDto;
 import org.mapstruct.Mapper;
+import org.mapstruct.factory.Mappers;
 
 
 import java.util.List;
 
-@Mapper(componentModel = "spring")
+@Mapper
 public interface WatchListMapper {
+    WatchListMapper INSTANCE = Mappers.getMapper(WatchListMapper.class);
+
     WatchListEntity toEntity(WatchListRequestDto request);
 
     WatchListResponseDto toResponse(WatchListEntity watchList);
