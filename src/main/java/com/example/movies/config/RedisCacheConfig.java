@@ -37,4 +37,5 @@ public class RedisCacheConfig {
                         "popularMovies", defaultConfig.entryTtl(Duration.ofMinutes(15))
                 ));
     }
+
 }
