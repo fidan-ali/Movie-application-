@@ -17,11 +17,14 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+import static com.example.movies.constant.Constant.NAME;
+import static com.example.movies.constant.Constant.WATCH_LIST;
+
 @Service
 @RequiredArgsConstructor
 public class WatchListService {
     private final WatchListRepository watchListRepository;
-    private final WatchListMapper watchListMapper;
+    private final WatchListMapper watchListMapper = WatchListMapper.INSTANCE;
     private final UserRepository userRepository;
 
     @Transactional
@@ -30,9 +33,8 @@ public class WatchListService {
         UserEntity user = userRepository.findById(userId).
                 orElseThrow(() -> new UserNotFoundException(userId));
         if (watchListRepository.existsByUserEntityIdAndName(userId, request.getName())) {
-            throw new DuplicateResourceException("Watchlist", "name", request.getName());
+            throw new DuplicateResourceException(WATCH_LIST, NAME, request.getName());
         }
-
 
         WatchListEntity watchList = watchListMapper.toEntity(request);
         watchList.setUserEntity(user);
@@ -56,4 +58,3 @@ public class WatchListService {
     }
 
 }
-

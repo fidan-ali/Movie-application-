@@ -20,13 +20,16 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+import static com.example.movies.constant.Constant.TMDB_MOVIE_ID;
+import static com.example.movies.constant.Constant.WATCH_LIST_ITEM;
+
 @Service
 @RequiredArgsConstructor
 public class WatchListItemService {
 
     private final WatchListItemRepository watchListItemRepository;
     private final WatchListRepository watchListRepository;
-    private final WatchListItemMapper watchListItemMapper;
+    private final WatchListItemMapper watchListItemMapper = WatchListItemMapper.INSTANCE;
     private final TmdbClientService tmdbClientService;
 
     @Transactional
@@ -34,7 +37,7 @@ public class WatchListItemService {
         WatchListEntity watchList = watchListRepository.findById(watchListId).
                 orElseThrow(() -> new WatchListNotFoundException(watchListId));
         if (watchListItemRepository.existsByWatchlistIdAndTmdbMovieId(watchListId, request.getTmdbMovieId())) {
-            throw new DuplicateResourceException("WatchListItem", "tmdbMovieId", request.getTmdbMovieId());
+            throw new DuplicateResourceException(WATCH_LIST_ITEM, TMDB_MOVIE_ID, request.getTmdbMovieId());
         }
 
         TmdbMovieDetails movieDetails = tmdbClientService.fetchMovieDetails(request.getTmdbMovieId());
