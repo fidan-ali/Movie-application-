@@ -13,16 +13,19 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+import static com.example.movies.constant.Constant.EMAIL;
+import static com.example.movies.constant.Constant.USER;
+
 @Service
 @RequiredArgsConstructor
 public class UserService {
     private final UserRepository userRepository;
-    private final UserMapper userMapper;
+    private final UserMapper userMapper = UserMapper.INSTANCE;
 
     @Transactional
     public UserResponseDto createUser(UserRequestDto request) {
         if (userRepository.existsByEmail(request.getEmail())) {
-            throw new DuplicateResourceException("User", "email", request.getEmail());
+            throw new DuplicateResourceException(USER, EMAIL, request.getEmail());
         }
         UserEntity user = userMapper.toEntity(request);
         UserEntity saved = userRepository.save(user);
@@ -35,7 +38,7 @@ public class UserService {
                 .orElseThrow(() -> new UserNotFoundException(id));
 
         if (userRepository.existsByEmailAndIdNot(request.getEmail(), id)) {
-            throw new DuplicateResourceException("User", "email", request.getEmail());
+            throw new DuplicateResourceException(USER, EMAIL, request.getEmail());
         }
 
         user.setFirstName(request.getFirstName());

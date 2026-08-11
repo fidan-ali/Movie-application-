@@ -8,7 +8,7 @@ public class TmdbApiException extends LocalizedException {
     private final int tmdbStatusCode;
 
     public TmdbApiException(int tmdbStatusCode, Throwable cause) {
-        super("error.tmdb.unavailable");
+        super(ErrorCode.TMDB_UNAVAILABLE, "error.tmdb.unavailable");
         this.tmdbStatusCode = tmdbStatusCode;
         initCause(cause);
     }

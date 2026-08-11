@@ -1,4 +1,3 @@
-// GlobalExceptionHandler.java
 package com.example.movies.exception;
 
 import lombok.RequiredArgsConstructor;
@@ -23,43 +22,43 @@ public class GlobalExceptionHandler {
     @ResponseStatus(HttpStatus.NOT_FOUND)
     @ExceptionHandler(UserNotFoundException.class)
     public ErrorResponse handleUserNotFound(UserNotFoundException ex) {
-        return buildError("USER_NOT_FOUND", ex);
+        return buildError(ErrorCode.USER_NOT_FOUND, ex);
     }
 
     @ResponseStatus(HttpStatus.NOT_FOUND)
     @ExceptionHandler(MovieNotFoundException.class)
     public ErrorResponse handleMovieNotFound(MovieNotFoundException ex) {
-        return buildError("MOVIE_NOT_FOUND", ex);
+        return buildError(ErrorCode.MOVIE_NOT_FOUND, ex);
     }
 
     @ResponseStatus(HttpStatus.NOT_FOUND)
     @ExceptionHandler(WatchListNotFoundException.class)
     public ErrorResponse handleWatchlistNotFoundException(WatchListNotFoundException ex) {
-        return buildError("WATCHLIST_NOT_FOUND", ex);
+        return buildError(ErrorCode.WATCHLIST_NOT_FOUND, ex);
     }
 
     @ResponseStatus(HttpStatus.NOT_FOUND)
     @ExceptionHandler(WatchListItemNotFoundException.class)
     public ErrorResponse handleWatchListItemNotFound(WatchListItemNotFoundException ex) {
-        return buildError("WATCHLISTITEM_NOT_FOUND", ex);
+        return buildError(ErrorCode.WATCHLISTITEM_NOT_FOUND, ex);
     }
 
     @ResponseStatus(HttpStatus.CONFLICT)
     @ExceptionHandler(DuplicateResourceException.class)
     public ErrorResponse handleDuplicateResource(DuplicateResourceException ex) {
-        return buildError("DUPLICATE_RESOURCE", ex);
+        return buildError(ErrorCode.DUPLICATE_RESOURCE, ex);
     }
 
     @ResponseStatus(HttpStatus.BAD_GATEWAY)
     @ExceptionHandler(TmdbApiException.class)
     public ErrorResponse handleTmdbApiException(TmdbApiException ex) {
         log.error("TMDB API call failed (status {}): {}", ex.getTmdbStatusCode(), ex.getMessage(), ex);
-        return buildError("TMDB_UNAVAILABLE", ex);
+        return buildError(ErrorCode.TMDB_UNAVAILABLE, ex);
     }
 
-    private ErrorResponse buildError(String code, LocalizedException ex) {
+    private ErrorResponse buildError(ErrorCode code, LocalizedException ex) {
         String message = messageSource.getMessage(ex.getMessageCode(), ex.getArgs(), LocaleContextHolder.getLocale());
-        return new ErrorResponse(new ErrorDetail(code, message));
+        return new ErrorResponse(new ErrorDetail(code.name(), message));
     }
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
@@ -68,6 +67,6 @@ public class GlobalExceptionHandler {
         String combinedMessage = ex.getBindingResult().getFieldErrors().stream()
                 .map(fieldError -> fieldError.getField() + ": " + fieldError.getDefaultMessage())
                 .collect(Collectors.joining("; "));
-        return new ErrorResponse(new ErrorDetail("VALIDATION_FAILED", combinedMessage));
+        return new ErrorResponse(new ErrorDetail(ErrorCode.VALIDATION_FAILED.name(), combinedMessage));
     }
 }
