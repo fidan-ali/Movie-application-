@@ -5,37 +5,68 @@ import com.example.movies.client.model.TmdbGenreResponse;
 import com.example.movies.client.model.TmdbMovieDetails;
 import com.example.movies.client.model.TmdbMovieResponse;
 import lombok.RequiredArgsConstructor;
-import org.springframework.cache.annotation.Cacheable;
+import org.redisson.api.RBucket;
+import org.redisson.api.RedissonClient;
 import org.springframework.stereotype.Service;
+
+import java.time.Duration;
+import java.util.function.Supplier;
 
 @Service
 @RequiredArgsConstructor
 public class TmdbClientService {
+
+    private static final String POPULAR_MOVIES_CACHE = "popularMovies::";
+    private static final String MOVIE_DETAILS_CACHE = "movieDetails::";
+    private static final String GENRES_CACHE = "genres";
+
+    private static final Duration POPULAR_MOVIES_TTL = Duration.ofMinutes(15);
+    private static final Duration MOVIE_DETAILS_TTL = Duration.ofHours(6);
+    private static final Duration GENRES_TTL = Duration.ofDays(1);
+
     private final TmdbFeignClient tmdbFeignClient;
     private final TmdbProperties tmdbProperties;
+    private final RedissonClient redissonClient;
 
-    @Cacheable(value = "popularMovies", key = "'popular_' + #page")
     public TmdbMovieResponse fetchPopularMovies(int page) {
-        return tmdbFeignClient.getPopularMovies(page, tmdbProperties.getKey());
+        String key = POPULAR_MOVIES_CACHE + "popular_" + page;
+        return fetchWithCache(key, POPULAR_MOVIES_TTL,
+                () -> tmdbFeignClient.getPopularMovies(page, tmdbProperties.getKey()));
     }
 
-    @Cacheable(value = "popularMovies", key = "'topRated_' + #page")
     public TmdbMovieResponse fetchTopRatedMovies(int page) {
-        return tmdbFeignClient.getTopRatedMovies(page, tmdbProperties.getKey());
+        String key = POPULAR_MOVIES_CACHE + "topRated_" + page;
+        return fetchWithCache(key, POPULAR_MOVIES_TTL,
+                () -> tmdbFeignClient.getTopRatedMovies(page, tmdbProperties.getKey()));
     }
 
-    @Cacheable(value = "popularMovies", key = "'upcoming_' + #page")
     public TmdbMovieResponse fetchUpcomingMovies(int page) {
-        return tmdbFeignClient.getUpcomingMovies(page, tmdbProperties.getKey());
+        String key = POPULAR_MOVIES_CACHE + "upcoming_" + page;
+        return fetchWithCache(key, POPULAR_MOVIES_TTL,
+                () -> tmdbFeignClient.getUpcomingMovies(page, tmdbProperties.getKey()));
     }
 
-    @Cacheable(value = "movieDetails", key = "#tmdbMovieId")
     public TmdbMovieDetails fetchMovieDetails(Long tmdbMovieId) {
-        return tmdbFeignClient.getMovieDetails(tmdbMovieId, tmdbProperties.getKey());
+        String key = MOVIE_DETAILS_CACHE + tmdbMovieId;
+        return fetchWithCache(key, MOVIE_DETAILS_TTL,
+                () -> tmdbFeignClient.getMovieDetails(tmdbMovieId, tmdbProperties.getKey()));
     }
 
-    @Cacheable(value = "genres")
     public TmdbGenreResponse fetchGenres() {
-        return tmdbFeignClient.getGenres(tmdbProperties.getKey());
+        return fetchWithCache(GENRES_CACHE, GENRES_TTL,
+                () -> tmdbFeignClient.getGenres(tmdbProperties.getKey()));
+    }
+
+    private <T> T fetchWithCache(String key, Duration ttl, Supplier<T> loader) {
+        RBucket<T> bucket = redissonClient.getBucket(key);
+        T cached = bucket.get();
+
+        if (cached != null) {
+            return cached;
+        }
+
+        T loaded = loader.get();
+        bucket.set(loaded, ttl);
+        return loaded;
     }
 }

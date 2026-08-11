@@ -16,6 +16,9 @@ spring:
   cache:
     type: redis
 
+redisson:
+  address: redis://${REDIS_HOST:localhost}:${REDIS_PORT:6379}
+
 tmdb:
   api:
     base-url: https://api.themoviedb.org

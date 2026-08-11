@@ -2,6 +2,7 @@ package com.example.movies.config;
 
 import org.redisson.Redisson;
 import org.redisson.api.RedissonClient;
+import org.redisson.codec.JsonJacksonCodec;
 import org.redisson.config.Config;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -11,13 +12,11 @@ import org.springframework.context.annotation.Configuration;
 public class RedisClientConfig {
 
     @Bean(destroyMethod = "shutdown")
-    public RedissonClient redissonClient(
-            @Value("${spring.data.redis.host}") String host,
-            @Value("${spring.data.redis.port}") int port) {
-
+    public RedissonClient redissonClient(@Value("${redisson.address}") String address) {
         Config config = new Config();
         config.useSingleServer()
-                .setAddress("redis://" + host + ":" + port);
+                .setAddress(address);
+        config.setCodec(new JsonJacksonCodec());
 
         return Redisson.create(config);
     }
