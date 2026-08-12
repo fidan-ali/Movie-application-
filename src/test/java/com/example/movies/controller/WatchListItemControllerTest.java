@@ -8,6 +8,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.web.servlet.MockMvc;
 
+import static com.example.movies.constant.Constant.HEADER_X_USER_ID;
 import static com.example.movies.constant.MovieApiTestConstants.BASE_WATCHLIST_ITEM_URL;
 import static com.example.movies.constant.MovieApiTestConstants.DEFAULT_PAGE_SIZE;
 import static com.example.movies.constant.MovieApiTestConstants.FIRST_PAGE;
@@ -52,10 +53,11 @@ class WatchListItemControllerTest {
         var request = mockWatchListItemRequestDto();
         var response = mockWatchListItemResponseDto();
 
-        when(watchListItemService.addItemToWatchlist(WATCHLIST_ID, request))
+        when(watchListItemService.addItemToWatchlist(WATCHLIST_ID, USER_ID, request))
                 .thenReturn(response);
 
         mockMvc.perform(post(BASE_WATCHLIST_ITEM_URL, WATCHLIST_ID)
+                        .header(HEADER_X_USER_ID, USER_ID)
                         .contentType(APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(request)))
                 .andExpect(status().isCreated())
@@ -64,7 +66,7 @@ class WatchListItemControllerTest {
                 ));
 
         verify(watchListItemService)
-                .addItemToWatchlist(WATCHLIST_ID, request);
+                .addItemToWatchlist(WATCHLIST_ID, USER_ID, request);
     }
 
     @Test
@@ -75,6 +77,7 @@ class WatchListItemControllerTest {
         request.setTmdbMovieId(null);
 
         mockMvc.perform(post(BASE_WATCHLIST_ITEM_URL, WATCHLIST_ID)
+                        .header(HEADER_X_USER_ID, USER_ID)
                         .contentType(APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(request)))
                 .andExpect(status().isBadRequest());
@@ -90,6 +93,7 @@ class WatchListItemControllerTest {
         request.setTmdbMovieId(ZERO);
 
         mockMvc.perform(post(BASE_WATCHLIST_ITEM_URL, WATCHLIST_ID)
+                        .header(HEADER_X_USER_ID, USER_ID)
                         .contentType(APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(request)))
                 .andExpect(status().isBadRequest());
@@ -104,6 +108,7 @@ class WatchListItemControllerTest {
         var request = mockWatchListItemRequestDto();
 
         mockMvc.perform(post(BASE_WATCHLIST_ITEM_URL, NON_NUMERIC_ID)
+                        .header(HEADER_X_USER_ID, USER_ID)
                         .contentType(APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(request)))
                 .andExpect(status().isBadRequest());
@@ -119,12 +124,12 @@ class WatchListItemControllerTest {
                                 WATCHLIST_ITEM_URL,
                                 WATCHLIST_ID,
                                 ITEM_ID_1
-                        )
+                        ).header(HEADER_X_USER_ID, USER_ID)
                 )
                 .andExpect(status().isNoContent());
 
         verify(watchListItemService)
-                .deleteWatchListItem(WATCHLIST_ID, ITEM_ID_1);
+                .deleteWatchListItem(WATCHLIST_ID, USER_ID, ITEM_ID_1);
     }
 
     @Test
@@ -136,7 +141,7 @@ class WatchListItemControllerTest {
                                 WATCHLIST_ITEM_URL,
                                 NON_NUMERIC_ID,
                                 ITEM_ID_1
-                        )
+                        ).header(HEADER_X_USER_ID, USER_ID)
                 )
                 .andExpect(status().isBadRequest());
 
@@ -152,7 +157,7 @@ class WatchListItemControllerTest {
                                 WATCHLIST_ITEM_URL,
                                 WATCHLIST_ID,
                                 NON_NUMERIC_ID
-                        )
+                        ).header(HEADER_X_USER_ID, USER_ID)
                 )
                 .andExpect(status().isBadRequest());
 
@@ -167,12 +172,14 @@ class WatchListItemControllerTest {
 
         when(watchListItemService.getWatchListItems(
                 WATCHLIST_ID,
+                USER_ID,
                 FIRST_PAGE,
                 PAGE_SIZE
         )).thenReturn(response);
 
         mockMvc.perform(
                         get(BASE_WATCHLIST_ITEM_URL, WATCHLIST_ID)
+                                .header(HEADER_X_USER_ID, USER_ID)
                                 .param(
                                         PAGE_PARAM,
                                         String.valueOf(FIRST_PAGE)
@@ -190,6 +197,7 @@ class WatchListItemControllerTest {
         verify(watchListItemService)
                 .getWatchListItems(
                         WATCHLIST_ID,
+                        USER_ID,
                         FIRST_PAGE,
                         PAGE_SIZE
                 );
@@ -203,12 +211,14 @@ class WatchListItemControllerTest {
 
         when(watchListItemService.getWatchListItems(
                 WATCHLIST_ID,
+                USER_ID,
                 FIRST_PAGE,
                 DEFAULT_PAGE_SIZE
         )).thenReturn(response);
 
         mockMvc.perform(
                         get(BASE_WATCHLIST_ITEM_URL, WATCHLIST_ID)
+                                .header(HEADER_X_USER_ID, USER_ID)
                 )
                 .andExpect(status().isOk())
                 .andExpect(content().json(
@@ -218,6 +228,7 @@ class WatchListItemControllerTest {
         verify(watchListItemService)
                 .getWatchListItems(
                         WATCHLIST_ID,
+                        USER_ID,
                         FIRST_PAGE,
                         DEFAULT_PAGE_SIZE
                 );
@@ -229,6 +240,7 @@ class WatchListItemControllerTest {
 
         mockMvc.perform(
                         get(BASE_WATCHLIST_ITEM_URL, NON_NUMERIC_ID)
+                                .header(HEADER_X_USER_ID, USER_ID)
                 )
                 .andExpect(status().isBadRequest());
 
