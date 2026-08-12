@@ -33,26 +33,26 @@ public class WatchListItemService {
     private final TmdbClientService tmdbClientService;
 
     @Transactional
-    public WatchListItemResponseDto addItemToWatchlist(Long watchListId, WatchListItemRequestDto request) {
-        WatchListEntity watchList = watchListRepository.findById(watchListId).
-                orElseThrow(() -> new WatchListNotFoundException(watchListId));
+    public WatchListItemResponseDto addItemToWatchlist(Long watchListId, Long userId, WatchListItemRequestDto request) {
+        WatchListEntity watchList = getOwnedWatchList(watchListId, userId);
+
         if (watchListItemRepository.existsByWatchlistIdAndTmdbMovieId(watchListId, request.getTmdbMovieId())) {
             throw new DuplicateResourceException(WATCH_LIST_ITEM, TMDB_MOVIE_ID, request.getTmdbMovieId());
         }
 
         TmdbMovieDetails movieDetails = tmdbClientService.fetchMovieDetails(request.getTmdbMovieId());
-
         WatchListItemEntity item = buildItem(request, watchList, movieDetails);
-
 
         WatchListItemEntity saved = watchListItemRepository.save(item);
         return watchListItemMapper.toResponse(saved);
     }
 
     @Transactional
-    public void deleteWatchListItem(Long watchListId, Long itemId){
-        WatchListItemEntity item = watchListItemRepository.findById(itemId).
-                orElseThrow(()-> new WatchListItemNotFoundException(itemId));
+    public void deleteWatchListItem(Long watchListId, Long userId, Long itemId) {
+        getOwnedWatchList(watchListId, userId);
+
+        WatchListItemEntity item = watchListItemRepository.findById(itemId)
+                .orElseThrow(() -> new WatchListItemNotFoundException(itemId));
 
         if (!item.getWatchlist().getId().equals(watchListId)) {
             throw new WatchListItemNotFoundException(itemId);
@@ -60,15 +60,23 @@ public class WatchListItemService {
 
         watchListItemRepository.delete(item);
     }
-    public WatchListItemPageResponseDto getWatchListItems(Long watchlistId, int page, int pageSize){
-        if(!watchListRepository.existsById(watchlistId)) {
-            throw new WatchListNotFoundException(watchlistId);
-        }
+
+    public WatchListItemPageResponseDto getWatchListItems(Long watchlistId, Long userId, int page, int pageSize) {
+        getOwnedWatchList(watchlistId, userId);
 
         List<WatchListItemEntity> allItems = watchListItemRepository.findAllByWatchlistId(watchlistId);
         return buildPageResponse(allItems, page, pageSize);
     }
 
+    private WatchListEntity getOwnedWatchList(Long watchListId, Long userId) {
+        WatchListEntity watchList = watchListRepository.findById(watchListId)
+                .orElseThrow(() -> new WatchListNotFoundException(watchListId));
+
+        if (!watchList.getUserEntity().getId().equals(userId)) {
+            throw new WatchListNotFoundException(watchListId);
+        }
+        return watchList;
+    }
 
     private WatchListItemEntity buildItem(WatchListItemRequestDto request, WatchListEntity watchList,
                                           TmdbMovieDetails movieDetails) {
@@ -94,5 +102,4 @@ public class WatchListItemService {
 
         return new WatchListItemPageResponseDto(page, totalPages, totalResults, pageItems);
     }
-
 }
