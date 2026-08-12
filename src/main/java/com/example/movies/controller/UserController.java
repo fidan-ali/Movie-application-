@@ -8,6 +8,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
+import static com.example.movies.constant.Constant.HEADER_X_USER_ID;
+
 @RestController
 @RequestMapping("/api/v1/users")
 @RequiredArgsConstructor
@@ -21,20 +23,20 @@ public class UserController {
     }
 
     @GetMapping
-    public UserResponseDto getUser(@RequestHeader("HEADER_X_USER_ID") Long userId) {
+    public UserResponseDto getUser(@RequestHeader(HEADER_X_USER_ID) Long userId) {
         return userService.getUserById(userId);
     }
 
     @PutMapping
     public UserResponseDto updateUser(
-            @RequestHeader("HEADER_X_USER_ID") Long userId,
+            @RequestHeader(HEADER_X_USER_ID) Long userId,
             @Valid @RequestBody UserRequestDto request) {
         return userService.updateUser(userId, request);
     }
 
     @DeleteMapping
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void deleteUser(@RequestHeader("HEADER_X_USER_ID") Long userId) {
+    public void deleteUser(@RequestHeader(HEADER_X_USER_ID) Long userId) {
         userService.deleteUserById(userId);
     }
 }

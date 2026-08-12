@@ -22,14 +22,14 @@ public class WatchListItemController {
         return watchListItemService.addItemToWatchlist(watchlistId, request);
     }
 
-    @DeleteMapping("/{itemId}")
+    @DeleteMapping("/{itemId}")//userId check
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteItem(@PathVariable Long watchlistId, @PathVariable Long itemId) {
         watchListItemService.deleteWatchListItem(watchlistId, itemId);
     }
 
     @GetMapping
-    public WatchListItemPageResponseDto getItems(@PathVariable Long watchlistId,
+    public WatchListItemPageResponseDto getItems(@PathVariable Long watchlistId,//findbyid user id watchliid
                                                  @RequestParam(defaultValue = "1") int page,
                                                  @RequestParam(value = "page_size", defaultValue = "20") int pageSize) {
         return watchListItemService.getWatchListItems(watchlistId, page, pageSize);

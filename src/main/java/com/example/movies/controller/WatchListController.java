@@ -17,6 +17,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import static com.example.movies.constant.Constant.HEADER_X_USER_ID;
+
 @RestController
 @RequestMapping("/api/v1/watchlists")
 @RequiredArgsConstructor
@@ -27,7 +29,7 @@ public class WatchListController {
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public WatchListResponseDto createWatchList(
-            @RequestHeader("HEADER_X_USER_ID") Long userId,
+            @RequestHeader(HEADER_X_USER_ID) Long userId, // magic string
             @Valid @RequestBody WatchListRequestDto request) {
 
         return watchListService.createWatchList(userId, request);
@@ -35,7 +37,7 @@ public class WatchListController {
 
     @GetMapping
     public WatchlistListResponseDto getUserWatchLists(
-            @RequestHeader("HEADER_X_USER_ID") Long userId) {
+            @RequestHeader(HEADER_X_USER_ID) Long userId) {
 
         return watchListService.getUserWatchLists(userId);
     }
@@ -44,7 +46,7 @@ public class WatchListController {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteWatchList(
             @PathVariable Long id,
-            @RequestHeader("HEADER_X_USER_ID") Long userId) {
+            @RequestHeader(HEADER_X_USER_ID) Long userId) {
 
         watchListService.deleteWatchList(id, userId);
     }
