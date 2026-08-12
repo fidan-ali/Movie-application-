@@ -13,4 +13,6 @@ public final class Constant {
 
     public static final String WATCH_LIST = "Watchlist";
     public static final String NAME = "name";
+
+    public static final String HEADER_X_USER_ID = "HEADER_X_USER_ID";
 }

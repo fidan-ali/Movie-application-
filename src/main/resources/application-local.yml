@@ -23,5 +23,9 @@ tmdb:
   api:
     base-url: https://api.themoviedb.org
     key: ${TMDB_API_KEY}
+  cache:
+    popular-movies-ttl-minutes: 15
+    movie-details-ttl-minutes: 360
+    genres-ttl-minutes: 1440
 server:
   port: 8084
