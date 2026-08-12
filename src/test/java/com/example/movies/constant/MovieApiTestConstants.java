@@ -15,8 +15,7 @@ import java.util.List;
 public class MovieApiTestConstants {
 
     public static final String BASE_USER_URL = "/api/v1/users";
-    public static final String BASE_WATCHLIST_URL =
-            "/api/v1/users/{userId}/watchlists";
+    public static final String BASE_WATCHLIST_URL = "/api/v1/watchlists";
     public static final String WATCHLIST_URL = "/api/v1/watchlists/{id}";
     public static final String BASE_WATCHLIST_ITEM_URL =
             "/api/v1/watchlists/{watchlistId}/items";

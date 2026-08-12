@@ -6,7 +6,7 @@ import com.example.movies.dto.WatchListItemResponseDto;
 import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;
 
-@Mapper
+@Mapper(componentModel = "spring")
 public interface WatchListItemMapper {
     WatchListItemMapper INSTANCE = Mappers.getMapper(WatchListItemMapper.class);
 

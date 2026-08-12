@@ -20,7 +20,7 @@ import static com.example.movies.constant.Constant.USER;
 @RequiredArgsConstructor
 public class UserService {
     private final UserRepository userRepository;
-    private final UserMapper userMapper = UserMapper.INSTANCE;
+    private final UserMapper userMapper;
 
     @Transactional
     public UserResponseDto createUser(UserRequestDto request) {

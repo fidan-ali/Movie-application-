@@ -1,6 +1,8 @@
 package com.example.movies.controller;
 
+import static com.example.movies.constant.Constant.HEADER_X_USER_ID;
 import static com.example.movies.constant.MovieApiTestConstants.BASE_USER_URL;
+import static com.example.movies.constant.MovieApiTestConstants.NON_NUMERIC_ID;
 import static com.example.movies.constant.MovieApiTestConstants.BLANK_VALUE;
 import static com.example.movies.constant.MovieApiTestConstants.FUTURE_BIRTH_DATE;
 import static com.example.movies.constant.MovieApiTestConstants.ID;
@@ -24,10 +26,12 @@ import com.example.movies.service.UserService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.web.servlet.MockMvc;
 
+@AutoConfigureMockMvc(addFilters = false)
 @WebMvcTest(controllers = {UserController.class})
 class UserControllerTest {
 
@@ -147,7 +151,7 @@ class UserControllerTest {
         var response = mockUserResponseDto(ID);
         when(userService.getUserById(ID)).thenReturn(response);
 
-        mockMvc.perform(get(BASE_USER_URL + "/{id}", ID))
+        mockMvc.perform(get(BASE_USER_URL).header(HEADER_X_USER_ID, ID))
                 .andExpect(status().isOk())
                 .andExpect(content().json(objectMapper.writeValueAsString(response)));
 
@@ -156,7 +160,7 @@ class UserControllerTest {
 
     @Test
     void getUser_shouldReturnBadRequest_whenIdIsNotNumeric() throws Exception {
-        mockMvc.perform(get(BASE_USER_URL + "/{id}", "abc"))
+        mockMvc.perform(get(BASE_USER_URL).header(HEADER_X_USER_ID, NON_NUMERIC_ID))
                 .andExpect(status().isBadRequest());
     }
 
@@ -167,7 +171,7 @@ class UserControllerTest {
         var response = mockUserResponseDto(ID);
         when(userService.updateUser(ID, request)).thenReturn(response);
 
-        mockMvc.perform(put(BASE_USER_URL + "/{id}", ID)
+        mockMvc.perform(put(BASE_USER_URL).header(HEADER_X_USER_ID, ID)
                         .contentType(APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(request)))
                 .andExpect(status().isOk())
@@ -181,7 +185,7 @@ class UserControllerTest {
         var request = mockUserRequestDto();
         request.setFirstName(BLANK_VALUE);
 
-        mockMvc.perform(put(BASE_USER_URL + "/{id}", ID)
+        mockMvc.perform(put(BASE_USER_URL).header(HEADER_X_USER_ID, ID)
                         .contentType(APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(request)))
                 .andExpect(status().isBadRequest());
@@ -192,7 +196,7 @@ class UserControllerTest {
     void deleteUser_shouldReturnNoContent() throws Exception {
         doNothing().when(userService).deleteUserById(ID);
 
-        mockMvc.perform(delete(BASE_USER_URL + "/{id}", ID))
+        mockMvc.perform(delete(BASE_USER_URL).header(HEADER_X_USER_ID, ID))
                 .andExpect(status().isNoContent());
 
         verify(userService).deleteUserById(ID);

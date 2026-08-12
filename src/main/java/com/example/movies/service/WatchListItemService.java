@@ -29,7 +29,7 @@ public class WatchListItemService {
 
     private final WatchListItemRepository watchListItemRepository;
     private final WatchListRepository watchListRepository;
-    private final WatchListItemMapper watchListItemMapper = WatchListItemMapper.INSTANCE;
+    private final WatchListItemMapper watchListItemMapper;
     private final TmdbClientService tmdbClientService;
 
     @Transactional

@@ -5,12 +5,14 @@ import com.example.movies.service.WatchListService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.List;
 
+import static com.example.movies.constant.Constant.HEADER_X_USER_ID;
 import static com.example.movies.constant.MovieApiTestConstants.BASE_WATCHLIST_URL;
 import static com.example.movies.constant.MovieApiTestConstants.NON_NUMERIC_ID;
 import static com.example.movies.constant.MovieApiTestConstants.USER_ID;
@@ -30,6 +32,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+@AutoConfigureMockMvc(addFilters = false)
 @WebMvcTest(WatchListController.class)
 class WatchListControllerTest {
 
@@ -52,7 +55,7 @@ class WatchListControllerTest {
         when(watchListService.createWatchList(USER_ID, request))
                 .thenReturn(response);
 
-        mockMvc.perform(post(BASE_WATCHLIST_URL, USER_ID)
+        mockMvc.perform(post(BASE_WATCHLIST_URL).header(HEADER_X_USER_ID, USER_ID)
                         .contentType(APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(request)))
                 .andExpect(status().isCreated())
@@ -70,7 +73,7 @@ class WatchListControllerTest {
         var request = mockWatchListRequestDto();
         request.setName(BLANK_VALUE);
 
-        mockMvc.perform(post(BASE_WATCHLIST_URL, USER_ID)
+        mockMvc.perform(post(BASE_WATCHLIST_URL).header(HEADER_X_USER_ID, USER_ID)
                         .contentType(APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(request)))
                 .andExpect(status().isBadRequest());
@@ -82,7 +85,7 @@ class WatchListControllerTest {
     void createWatchList_shouldReturnBadRequest_whenBodyIsMissing()
             throws Exception {
 
-        mockMvc.perform(post(BASE_WATCHLIST_URL, USER_ID)
+        mockMvc.perform(post(BASE_WATCHLIST_URL).header(HEADER_X_USER_ID, USER_ID)
                         .contentType(APPLICATION_JSON))
                 .andExpect(status().isBadRequest());
 
@@ -95,7 +98,7 @@ class WatchListControllerTest {
 
         var request = mockWatchListRequestDto();
 
-        mockMvc.perform(post(BASE_WATCHLIST_URL, NON_NUMERIC_ID)
+        mockMvc.perform(post(BASE_WATCHLIST_URL).header(HEADER_X_USER_ID, NON_NUMERIC_ID)
                         .contentType(APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(request)))
                 .andExpect(status().isBadRequest());
@@ -116,7 +119,7 @@ class WatchListControllerTest {
         when(watchListService.getUserWatchLists(USER_ID))
                 .thenReturn(response);
 
-        mockMvc.perform(get(BASE_WATCHLIST_URL, USER_ID))
+        mockMvc.perform(get(BASE_WATCHLIST_URL).header(HEADER_X_USER_ID, USER_ID))
                 .andExpect(status().isOk())
                 .andExpect(content().json(
                         objectMapper.writeValueAsString(response)
@@ -129,7 +132,7 @@ class WatchListControllerTest {
     void getUserWatchLists_shouldReturnBadRequest_whenUserIdIsNotNumeric()
             throws Exception {
 
-        mockMvc.perform(get(BASE_WATCHLIST_URL, NON_NUMERIC_ID))
+        mockMvc.perform(get(BASE_WATCHLIST_URL).header(HEADER_X_USER_ID, NON_NUMERIC_ID))
                 .andExpect(status().isBadRequest());
 
         verifyNoInteractions(watchListService);
@@ -141,7 +144,7 @@ class WatchListControllerTest {
         doNothing().when(watchListService).deleteWatchList(WATCHLIST_ID, USER_ID);
 
         mockMvc.perform(delete(WATCHLIST_URL, WATCHLIST_ID)
-                        .header("userId", USER_ID))
+                        .header(HEADER_X_USER_ID, USER_ID))
                 .andExpect(status().isNoContent());
 
         verify(watchListService).deleteWatchList(WATCHLIST_ID, USER_ID);
@@ -151,7 +154,7 @@ class WatchListControllerTest {
     void deleteWatchList_shouldReturnBadRequest_whenIdIsNotNumeric()
             throws Exception {
 
-        mockMvc.perform(delete(WATCHLIST_URL, NON_NUMERIC_ID))
+        mockMvc.perform(delete(WATCHLIST_URL, NON_NUMERIC_ID).header(HEADER_X_USER_ID, USER_ID))
                 .andExpect(status().isBadRequest());
 
         verifyNoInteractions(watchListService);

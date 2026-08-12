@@ -24,7 +24,7 @@ import static com.example.movies.constant.Constant.WATCH_LIST;
 @RequiredArgsConstructor
 public class WatchListService {
     private final WatchListRepository watchListRepository;
-    private final WatchListMapper watchListMapper = WatchListMapper.INSTANCE;
+    private final WatchListMapper watchListMapper;
     private final UserRepository userRepository;
 
     @Transactional

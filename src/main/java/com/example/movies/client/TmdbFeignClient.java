@@ -14,7 +14,7 @@ import static com.example.movies.client.TmdbApiConstants.API_KEY;
 
 @FeignClient(
         name = "tmdb-client",
-        url = "${tmdb.api.base-url}",
+        url = "${tmdb.api.base-url:https://api.themoviedb.org}",
         configuration = TmdbFeignConfig.class
 )
 public interface TmdbFeignClient {
