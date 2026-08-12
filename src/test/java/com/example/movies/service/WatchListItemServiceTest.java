@@ -102,7 +102,15 @@ class WatchListItemServiceTest {
         item.setId(ID);
 
         WatchListItemResponseDto responseDto =
-                new WatchListItemResponseDto(ID, null, null, MOVIE_TITLE, null, null, null);
+                new WatchListItemResponseDto(
+                        ID,
+                        null,
+                        null,
+                        MOVIE_TITLE,
+                        null,
+                        null,
+                        null
+                );
 
         when(watchListRepository.findById(ID))
                 .thenReturn(Optional.of(watchList));
@@ -127,7 +135,7 @@ class WatchListItemServiceTest {
                 .thenReturn(responseDto);
 
         WatchListItemResponseDto result =
-                service.addItemToWatchlist(ID, request);
+                service.addItemToWatchlist(ID, ID, request);
 
         assertEquals(ID, result.id());
         assertEquals(MOVIE_TITLE, result.title());
@@ -164,7 +172,6 @@ class WatchListItemServiceTest {
 
         WatchListItemRequestDto request =
                 new WatchListItemRequestDto();
-
         request.setTmdbMovieId(TMDB_MOVIE_ID);
 
         when(watchListRepository.findById(ID))
@@ -172,7 +179,7 @@ class WatchListItemServiceTest {
 
         assertThrows(
                 WatchListNotFoundException.class,
-                () -> service.addItemToWatchlist(ID, request)
+                () -> service.addItemToWatchlist(ID, ID, request)
         );
 
         verify(watchListRepository).findById(ID);
@@ -193,7 +200,6 @@ class WatchListItemServiceTest {
 
         WatchListItemRequestDto request =
                 new WatchListItemRequestDto();
-
         request.setTmdbMovieId(TMDB_MOVIE_ID);
 
         when(watchListRepository.findById(ID))
@@ -208,7 +214,7 @@ class WatchListItemServiceTest {
 
         assertThrows(
                 DuplicateResourceException.class,
-                () -> service.addItemToWatchlist(ID, request)
+                () -> service.addItemToWatchlist(ID, ID, request)
         );
 
         verify(watchListRepository).findById(ID);
@@ -240,11 +246,15 @@ class WatchListItemServiceTest {
         item.setId(ID);
         item.setWatchlist(watchList);
 
+        when(watchListRepository.findById(ID))
+                .thenReturn(Optional.of(watchList));
+
         when(watchListItemRepository.findById(ID))
                 .thenReturn(Optional.of(item));
 
-        service.deleteWatchListItem(ID, ID);
+        service.deleteWatchListItem(ID, ID, ID);
 
+        verify(watchListRepository).findById(ID);
         verify(watchListItemRepository).findById(ID);
         verify(watchListItemRepository).delete(item);
     }
@@ -253,14 +263,21 @@ class WatchListItemServiceTest {
     @Test
     void shouldThrowWatchListItemNotFoundExceptionWhenItemDoesNotExist() {
 
+        WatchListEntity watchList = new WatchListEntity();
+        watchList.setId(ID);
+
+        when(watchListRepository.findById(ID))
+                .thenReturn(Optional.of(watchList));
+
         when(watchListItemRepository.findById(ID))
                 .thenReturn(Optional.empty());
 
         assertThrows(
                 WatchListItemNotFoundException.class,
-                () -> service.deleteWatchListItem(ID, ID)
+                () -> service.deleteWatchListItem(ID, ID, ID)
         );
 
+        verify(watchListRepository).findById(ID);
         verify(watchListItemRepository).findById(ID);
 
         verify(watchListItemRepository, never())
@@ -271,6 +288,9 @@ class WatchListItemServiceTest {
     @Test
     void shouldThrowWatchListItemNotFoundExceptionWhenItemBelongsToAnotherWatchlist() {
 
+        WatchListEntity watchList = new WatchListEntity();
+        watchList.setId(ID);
+
         WatchListEntity anotherWatchList =
                 new WatchListEntity();
         anotherWatchList.setId(ANOTHER_WATCHLIST_ID);
@@ -280,14 +300,18 @@ class WatchListItemServiceTest {
         item.setId(ID);
         item.setWatchlist(anotherWatchList);
 
+        when(watchListRepository.findById(ID))
+                .thenReturn(Optional.of(watchList));
+
         when(watchListItemRepository.findById(ID))
                 .thenReturn(Optional.of(item));
 
         assertThrows(
                 WatchListItemNotFoundException.class,
-                () -> service.deleteWatchListItem(ID, ID)
+                () -> service.deleteWatchListItem(ID, ID, ID)
         );
 
+        verify(watchListRepository).findById(ID);
         verify(watchListItemRepository).findById(ID);
 
         verify(watchListItemRepository, never())
@@ -297,6 +321,9 @@ class WatchListItemServiceTest {
 
     @Test
     void shouldReturnWatchListItemsPage() {
+
+        WatchListEntity watchList = new WatchListEntity();
+        watchList.setId(ID);
 
         WatchListItemEntity item1 =
                 new WatchListItemEntity();
@@ -310,13 +337,29 @@ class WatchListItemServiceTest {
                 List.of(item1, item2);
 
         WatchListItemResponseDto dto1 =
-                new WatchListItemResponseDto(ITEM_ID_1, null, null, null, null, null, null);
+                new WatchListItemResponseDto(
+                        ITEM_ID_1,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null
+                );
 
         WatchListItemResponseDto dto2 =
-                new WatchListItemResponseDto(ITEM_ID_2, null, null, null, null, null, null);
+                new WatchListItemResponseDto(
+                        ITEM_ID_2,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null
+                );
 
-        when(watchListItemRepository.existsById(ID))
-                .thenReturn(true);
+        when(watchListRepository.findById(ID))
+                .thenReturn(Optional.of(watchList));
 
         when(watchListItemRepository.findAllByWatchlistId(ID))
                 .thenReturn(items);
@@ -329,6 +372,7 @@ class WatchListItemServiceTest {
 
         WatchListItemPageResponseDto result =
                 service.getWatchListItems(
+                        ID,
                         ID,
                         FIRST_PAGE,
                         LARGE_PAGE_SIZE
@@ -354,8 +398,8 @@ class WatchListItemServiceTest {
                 result.items()
         );
 
-        verify(watchListItemRepository)
-                .existsById(ID);
+        verify(watchListRepository)
+                .findById(ID);
 
         verify(watchListItemRepository)
                 .findAllByWatchlistId(ID);
@@ -370,6 +414,9 @@ class WatchListItemServiceTest {
 
     @Test
     void shouldReturnSecondPageOfWatchListItems() {
+
+        WatchListEntity watchList = new WatchListEntity();
+        watchList.setId(ID);
 
         WatchListItemEntity item1 =
                 new WatchListItemEntity();
@@ -387,10 +434,18 @@ class WatchListItemServiceTest {
                 List.of(item1, item2, item3);
 
         WatchListItemResponseDto dto3 =
-                new WatchListItemResponseDto(ITEM_ID_3, null, null, null, null, null, null);
+                new WatchListItemResponseDto(
+                        ITEM_ID_3,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null
+                );
 
-        when(watchListItemRepository.existsById(ID))
-                .thenReturn(true);
+        when(watchListRepository.findById(ID))
+                .thenReturn(Optional.of(watchList));
 
         when(watchListItemRepository.findAllByWatchlistId(ID))
                 .thenReturn(items);
@@ -400,6 +455,7 @@ class WatchListItemServiceTest {
 
         WatchListItemPageResponseDto result =
                 service.getWatchListItems(
+                        ID,
                         ID,
                         SECOND_PAGE,
                         PAGE_SIZE
@@ -424,26 +480,36 @@ class WatchListItemServiceTest {
                 List.of(dto3),
                 result.items()
         );
+
+        verify(watchListRepository)
+                .findById(ID);
+
+        verify(watchListItemRepository)
+                .findAllByWatchlistId(ID);
+
+        verify(watchListItemMapper)
+                .toResponse(item3);
     }
 
 
     @Test
-    void shouldThrowWatchListItemNotFoundExceptionWhenWatchListDoesNotExist() {
+    void shouldThrowWatchListNotFoundExceptionWhenWatchListDoesNotExist() {
 
-        when(watchListItemRepository.existsById(ID))
-                .thenReturn(false);
+        when(watchListRepository.findById(ID))
+                .thenReturn(Optional.empty());
 
         assertThrows(
-                WatchListItemNotFoundException.class,
+                WatchListNotFoundException.class,
                 () -> service.getWatchListItems(
+                        ID,
                         ID,
                         FIRST_PAGE,
                         LARGE_PAGE_SIZE
                 )
         );
 
-        verify(watchListItemRepository)
-                .existsById(ID);
+        verify(watchListRepository)
+                .findById(ID);
 
         verify(watchListItemRepository, never())
                 .findAllByWatchlistId(any());
