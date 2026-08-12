@@ -16,6 +16,9 @@ import java.util.function.Supplier;
 import static com.example.movies.client.TmdbApiConstants.GENRES_CACHE;
 import static com.example.movies.client.TmdbApiConstants.MOVIE_DETAILS_CACHE;
 import static com.example.movies.client.TmdbApiConstants.POPULAR_MOVIES_CACHE;
+import static com.example.movies.constant.Constant.POPULAR;
+import static com.example.movies.constant.Constant.TOP_RATED;
+import static com.example.movies.constant.Constant.UPCOMING;
 
 @Service
 @RequiredArgsConstructor
@@ -27,19 +30,19 @@ public class TmdbClientService {
     private final RedissonClient redissonClient;
 
     public TmdbMovieResponse fetchPopularMovies(int page) {
-        String key = POPULAR_MOVIES_CACHE + "popular_" + page;
+        String key = POPULAR_MOVIES_CACHE + POPULAR + page;
         return fetchWithCache(key, popularMoviesTtl(),
                 () -> tmdbFeignClient.getPopularMovies(page, tmdbProperties.getKey()));
     }
 
     public TmdbMovieResponse fetchTopRatedMovies(int page) {
-        String key = POPULAR_MOVIES_CACHE + "topRated_" + page;
+        String key = POPULAR_MOVIES_CACHE + TOP_RATED + page;
         return fetchWithCache(key, popularMoviesTtl(),
                 () -> tmdbFeignClient.getTopRatedMovies(page, tmdbProperties.getKey()));
     }
 
     public TmdbMovieResponse fetchUpcomingMovies(int page) {
-        String key = POPULAR_MOVIES_CACHE + "upcoming_" + page;
+        String key = POPULAR_MOVIES_CACHE + UPCOMING + page;
         return fetchWithCache(key, popularMoviesTtl(),
                 () -> tmdbFeignClient.getUpcomingMovies(page, tmdbProperties.getKey()));
     }

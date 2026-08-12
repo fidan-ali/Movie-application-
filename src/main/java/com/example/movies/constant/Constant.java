@@ -15,4 +15,11 @@ public final class Constant {
     public static final String NAME = "name";
 
     public static final String HEADER_X_USER_ID = "HEADER_X_USER_ID";
+
+    public static final String UNKNOWN_GENRE = "Unknown";
+
+    public static final String POPULAR = "popular_";
+    public static final String TOP_RATED = "topRated_";
+    public static final String UPCOMING = "upcoming_";
+
 }
