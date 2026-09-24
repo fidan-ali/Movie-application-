@@ -1,0 +1,12 @@
+spring:
+  jpa:
+    hibernate:
+      ddl-auto: validate
+
+  liquibase:
+    change-log: classpath:db/changelog/db.changelog-master.yaml
+
+  messages:
+    basename: messages
+    encoding: UTF-8
+    fallback-to-system-locale: false
