@@ -14,9 +14,9 @@ import com.example.movies.dto.WatchListItemResponseDto;
 import com.example.movies.exception.DuplicateResourceException;
 import com.example.movies.exception.WatchListItemNotFoundException;
 import com.example.movies.exception.WatchListNotFoundException;
-import com.example.movies.mapper.WatchListItemMapper;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -61,9 +61,6 @@ class WatchListItemServiceTest {
     private WatchListRepository watchListRepository;
 
     @Mock
-    private WatchListItemMapper watchListItemMapper;
-
-    @Mock
     private TmdbClientService tmdbClientService;
 
     @InjectMocks
@@ -102,21 +99,6 @@ class WatchListItemServiceTest {
                         MOVIE_BACKDROP_PATH
                 );
 
-        WatchListItemEntity item =
-                new WatchListItemEntity();
-        item.setId(ID);
-
-        WatchListItemResponseDto responseDto =
-                new WatchListItemResponseDto(
-                        ID,
-                        null,
-                        null,
-                        MOVIE_TITLE,
-                        null,
-                        null,
-                        null
-                );
-
         when(watchListRepository.findById(ID))
                 .thenReturn(Optional.of(watchList));
 
@@ -130,25 +112,27 @@ class WatchListItemServiceTest {
         when(tmdbClientService.fetchMovieDetails(TMDB_MOVIE_ID))
                 .thenReturn(movieDetails);
 
-        when(watchListItemMapper.toEntity(request))
-                .thenReturn(item);
-
-        when(watchListItemRepository.save(item))
-                .thenReturn(item);
-
-        when(watchListItemMapper.toResponse(item))
-                .thenReturn(responseDto);
+        when(watchListItemRepository.save(any(WatchListItemEntity.class)))
+                .thenAnswer(invocation -> {
+                    WatchListItemEntity saved = invocation.getArgument(0);
+                    saved.setId(ID);
+                    return saved;
+                });
 
         WatchListItemResponseDto result =
                 service.addItemToWatchlist(ID, ID, request);
 
         assertEquals(ID, result.id());
+        assertEquals(ID, result.watchlistId());
+        assertEquals(TMDB_MOVIE_ID, result.tmdbMovieId());
         assertEquals(MOVIE_TITLE, result.title());
+        assertEquals(List.of(MOVIE_GENRE), result.genres());
+        assertEquals(MOVIE_VOTE_AVERAGE, result.voteAverage());
 
-        assertEquals(watchList, item.getWatchlist());
-        assertEquals(MOVIE_TITLE, item.getTitle());
-        assertEquals(List.of(MOVIE_GENRE), item.getGenres());
-        assertEquals(MOVIE_VOTE_AVERAGE, item.getVoteAverage());
+        ArgumentCaptor<WatchListItemEntity> captor =
+                ArgumentCaptor.forClass(WatchListItemEntity.class);
+        verify(watchListItemRepository).save(captor.capture());
+        assertEquals(watchList, captor.getValue().getWatchlist());
 
         verify(watchListRepository).findById(ID);
 
@@ -160,15 +144,6 @@ class WatchListItemServiceTest {
 
         verify(tmdbClientService)
                 .fetchMovieDetails(TMDB_MOVIE_ID);
-
-        verify(watchListItemMapper)
-                .toEntity(request);
-
-        verify(watchListItemRepository)
-                .save(item);
-
-        verify(watchListItemMapper)
-                .toResponse(item);
     }
 
 
@@ -191,8 +166,7 @@ class WatchListItemServiceTest {
 
         verifyNoInteractions(
                 watchListItemRepository,
-                tmdbClientService,
-                watchListItemMapper
+                tmdbClientService
         );
     }
 
@@ -234,10 +208,7 @@ class WatchListItemServiceTest {
                         TMDB_MOVIE_ID
                 );
 
-        verifyNoInteractions(
-                tmdbClientService,
-                watchListItemMapper
-        );
+        verifyNoInteractions(tmdbClientService);
 
         verify(watchListItemRepository, never())
                 .save(any());
@@ -361,39 +332,11 @@ class WatchListItemServiceTest {
         List<WatchListItemEntity> items =
                 List.of(item1, item2);
 
-        WatchListItemResponseDto dto1 =
-                new WatchListItemResponseDto(
-                        ITEM_ID_1,
-                        null,
-                        null,
-                        null,
-                        null,
-                        null,
-                        null
-                );
-
-        WatchListItemResponseDto dto2 =
-                new WatchListItemResponseDto(
-                        ITEM_ID_2,
-                        null,
-                        null,
-                        null,
-                        null,
-                        null,
-                        null
-                );
-
         when(watchListRepository.findById(ID))
                 .thenReturn(Optional.of(watchList));
 
         when(watchListItemRepository.findAllByWatchlistId(ID))
                 .thenReturn(items);
-
-        when(watchListItemMapper.toResponse(item1))
-                .thenReturn(dto1);
-
-        when(watchListItemMapper.toResponse(item2))
-                .thenReturn(dto2);
 
         WatchListItemPageResponseDto result =
                 service.getWatchListItems(
@@ -418,22 +361,15 @@ class WatchListItemServiceTest {
                 result.totalResults()
         );
 
-        assertEquals(
-                List.of(dto1, dto2),
-                result.items()
-        );
+        assertEquals(2, result.items().size());
+        assertEquals(ITEM_ID_1, result.items().get(0).id());
+        assertEquals(ITEM_ID_2, result.items().get(1).id());
 
         verify(watchListRepository)
                 .findById(ID);
 
         verify(watchListItemRepository)
                 .findAllByWatchlistId(ID);
-
-        verify(watchListItemMapper)
-                .toResponse(item1);
-
-        verify(watchListItemMapper)
-                .toResponse(item2);
     }
 
 
@@ -462,25 +398,11 @@ class WatchListItemServiceTest {
         List<WatchListItemEntity> items =
                 List.of(item1, item2, item3);
 
-        WatchListItemResponseDto dto3 =
-                new WatchListItemResponseDto(
-                        ITEM_ID_3,
-                        null,
-                        null,
-                        null,
-                        null,
-                        null,
-                        null
-                );
-
         when(watchListRepository.findById(ID))
                 .thenReturn(Optional.of(watchList));
 
         when(watchListItemRepository.findAllByWatchlistId(ID))
                 .thenReturn(items);
-
-        when(watchListItemMapper.toResponse(item3))
-                .thenReturn(dto3);
 
         WatchListItemPageResponseDto result =
                 service.getWatchListItems(
@@ -505,19 +427,14 @@ class WatchListItemServiceTest {
                 result.totalResults()
         );
 
-        assertEquals(
-                List.of(dto3),
-                result.items()
-        );
+        assertEquals(1, result.items().size());
+        assertEquals(ITEM_ID_3, result.items().get(0).id());
 
         verify(watchListRepository)
                 .findById(ID);
 
         verify(watchListItemRepository)
                 .findAllByWatchlistId(ID);
-
-        verify(watchListItemMapper)
-                .toResponse(item3);
     }
 
 
@@ -543,6 +460,5 @@ class WatchListItemServiceTest {
         verify(watchListItemRepository, never())
                 .findAllByWatchlistId(any());
 
-        verifyNoInteractions(watchListItemMapper);
     }
 }

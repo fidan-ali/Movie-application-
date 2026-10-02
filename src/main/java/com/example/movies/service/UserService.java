@@ -20,17 +20,7 @@ import static com.example.movies.constant.Constant.USER;
 @RequiredArgsConstructor
 public class UserService {
     private final UserRepository userRepository;
-    private final UserMapper userMapper;
-
-    @Transactional
-    public UserResponseDto createUser(UserRequestDto request) {
-        if (userRepository.existsByEmail(request.getEmail())) {
-            throw new DuplicateResourceException(USER, EMAIL, request.getEmail());
-        }
-        UserEntity user = userMapper.toEntity(request);
-        UserEntity saved = userRepository.save(user);
-        return userMapper.toResponse(saved);
-    }
+    private final UserMapper userMapper = UserMapper.INSTANCE;
 
     @Transactional
     public UserResponseDto updateUser(Long id, UserRequestDto request) {

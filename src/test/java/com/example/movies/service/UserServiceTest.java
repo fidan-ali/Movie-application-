@@ -6,7 +6,6 @@ import com.example.movies.dto.UserRequestDto;
 import com.example.movies.dto.UserResponseDto;
 import com.example.movies.exception.DuplicateResourceException;
 import com.example.movies.exception.UserNotFoundException;
-import com.example.movies.mapper.UserMapper;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -20,6 +19,7 @@ import static com.example.movies.constant.MovieApiTestConstants.EMAIL;
 import static com.example.movies.constant.MovieApiTestConstants.ID;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -27,9 +27,6 @@ import static org.mockito.Mockito.when;
 public class UserServiceTest {
     @Mock
     private UserRepository repository;
-
-    @Mock
-    private UserMapper mapper;
 
     @InjectMocks
     private UserService service;
@@ -39,10 +36,7 @@ public class UserServiceTest {
         UserEntity entity = new UserEntity();
         entity.setId(ID);
 
-        UserResponseDto dto = new UserResponseDto(ID, null, null, null, null, null);
-
         when(repository.findById(ID)).thenReturn(Optional.of(entity));
-        when(mapper.toResponse(entity)).thenReturn(dto);
 
         UserResponseDto result = service.getUserById(ID);
 
@@ -58,40 +52,6 @@ public class UserServiceTest {
     }
 
     @Test
-    void shouldCreateUser() {
-        UserRequestDto request = new UserRequestDto();
-        request.setEmail(EMAIL);
-
-        UserEntity entity = new UserEntity();
-
-        UserEntity saved = new UserEntity();
-        saved.setId(ID);
-
-        UserResponseDto dto = new UserResponseDto(ID, null, null, null, null, null);
-
-        when(repository.existsByEmail(request.getEmail())).thenReturn((false));
-        when(mapper.toEntity(request)).thenReturn(entity);
-        when(repository.save(entity)).thenReturn(saved);
-        when(mapper.toResponse(saved)).thenReturn(dto);
-        UserResponseDto result = service.createUser(request);
-
-        assertEquals(ID, result.id());
-
-    }
-
-    @Test
-    void shouldThrowExceptionWhenEmailAlreadyExists() {
-        UserRequestDto request = new UserRequestDto();
-        request.setEmail(EMAIL);
-
-        when(repository.existsByEmail(request.getEmail()))
-                .thenReturn(true);
-
-        assertThrows(DuplicateResourceException.class,
-                () -> service.createUser(request));
-    }
-
-    @Test
     void shouldUpdateUser() {
         UserRequestDto request = new UserRequestDto();
         request.setEmail(EMAIL);
@@ -99,12 +59,9 @@ public class UserServiceTest {
         UserEntity entity = new UserEntity();
         entity.setId(ID);
 
-        UserResponseDto dto = new UserResponseDto(ID, null, null, null, null, null);
-
         when(repository.findById(ID)).thenReturn(Optional.of(entity));
         when(repository.existsByEmailAndIdNot(request.getEmail(), ID)).thenReturn(false);
         when(repository.save(entity)).thenReturn(entity);
-        when(mapper.toResponse(entity)).thenReturn(dto);
 
         UserResponseDto result = service.updateUser(ID, request);
 
@@ -164,13 +121,8 @@ public class UserServiceTest {
 
         List<UserEntity> entities = List.of(new UserEntity());
 
-        List<UserResponseDto> dtos = List.of(new UserResponseDto(ID, null, null, null, null, null));
-
         when(repository.findAll())
                 .thenReturn(entities);
-
-        when(mapper.toResponseList(entities))
-                .thenReturn(dtos);
 
         List<UserResponseDto> result = service.getAll();
 

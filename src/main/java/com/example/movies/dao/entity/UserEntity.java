@@ -1,8 +1,11 @@
 package com.example.movies.dao.entity;
 
+import com.example.movies.constant.Role;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -44,6 +47,13 @@ public class UserEntity {
 
     @Column(nullable = false)
     private LocalDate birthDate;
+
+    @Column(nullable = false)
+    private String password;
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private Role role;
 
     @CreationTimestamp
     @Column(nullable = false, updatable = false)

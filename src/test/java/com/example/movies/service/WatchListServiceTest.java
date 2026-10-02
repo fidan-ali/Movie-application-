@@ -10,9 +10,9 @@ import com.example.movies.dto.WatchlistListResponseDto;
 import com.example.movies.exception.DuplicateResourceException;
 import com.example.movies.exception.UserNotFoundException;
 import com.example.movies.exception.WatchListNotFoundException;
-import com.example.movies.mapper.WatchListMapper;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -39,9 +39,6 @@ public class WatchListServiceTest {
     @Mock
     private UserRepository userRepository;
 
-    @Mock
-    private WatchListMapper mapper;
-
     @InjectMocks
     private WatchListService service;
 
@@ -58,37 +55,31 @@ public class WatchListServiceTest {
         watchList.setName(WATCH_LIST_NAME);
         watchList.setUserEntity(user);
 
-        WatchListResponseDto responseDto =
-                new WatchListResponseDto(ID, ID, WATCH_LIST_NAME, null);
-
         when(userRepository.findById(ID))
                 .thenReturn(Optional.of(user));
 
         when(watchListRepository.existsByUserEntityIdAndName(ID, WATCH_LIST_NAME))
                 .thenReturn(false);
 
-        when(mapper.toEntity(request))
+        when(watchListRepository.save(any(WatchListEntity.class)))
                 .thenReturn(watchList);
-
-        when(watchListRepository.save(watchList))
-                .thenReturn(watchList);
-
-        when(mapper.toResponse(watchList))
-                .thenReturn(responseDto);
 
         WatchListResponseDto result =
                 service.createWatchList(ID, request);
 
         assertEquals(ID, result.id());
+        assertEquals(ID, result.userId());
         assertEquals(WATCH_LIST_NAME, result.name());
-        assertEquals(user, watchList.getUserEntity());
+
+        ArgumentCaptor<WatchListEntity> captor =
+                ArgumentCaptor.forClass(WatchListEntity.class);
+        verify(watchListRepository).save(captor.capture());
+        assertEquals(user, captor.getValue().getUserEntity());
+        assertEquals(WATCH_LIST_NAME, captor.getValue().getName());
 
         verify(userRepository).findById(ID);
         verify(watchListRepository)
                 .existsByUserEntityIdAndName(ID, WATCH_LIST_NAME);
-        verify(mapper).toEntity(request);
-        verify(watchListRepository).save(watchList);
-        verify(mapper).toResponse(watchList);
     }
 
     @Test
@@ -105,7 +96,7 @@ public class WatchListServiceTest {
         );
 
         verify(userRepository).findById(ID);
-        verifyNoInteractions(watchListRepository, mapper);
+        verifyNoInteractions(watchListRepository);
     }
 
     @Test
@@ -130,24 +121,26 @@ public class WatchListServiceTest {
 
     @Test
     void shouldReturnUserWatchLists() {
+        UserEntity user = new UserEntity();
+        user.setId(ID);
+
         WatchListEntity watchList = new WatchListEntity();
         watchList.setId(ID);
+        watchList.setName(WATCH_LIST_NAME);
+        watchList.setUserEntity(user);
 
         List<WatchListEntity> watchLists = List.of(watchList);
-
-        WatchlistListResponseDto responseDto =
-                new WatchlistListResponseDto(List.of());
 
         when(watchListRepository.findAllByUserEntityId(ID))
                 .thenReturn(watchLists);
 
-        when(mapper.toListDto(watchLists))
-                .thenReturn(responseDto);
-
         WatchlistListResponseDto result =
                 service.getUserWatchLists(ID);
 
-        assertEquals(responseDto, result);
+        assertEquals(1, result.watchlists().size());
+        assertEquals(ID, result.watchlists().get(0).id());
+        assertEquals(ID, result.watchlists().get(0).userId());
+        assertEquals(WATCH_LIST_NAME, result.watchlists().get(0).name());
     }
 
     @Test

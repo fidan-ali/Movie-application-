@@ -29,3 +29,8 @@ tmdb:
     genres-ttl-minutes: 1440
 server:
   port: 8084
+security:
+  jwt:
+    secret: ${JWT_SECRET:local-dev-secret-change-me-at-least-32-bytes-long}
+    access-token-validity-minutes: 15
+    refresh-token-validity-days: 7
