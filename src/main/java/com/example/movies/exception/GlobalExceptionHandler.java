@@ -69,4 +69,16 @@ public class GlobalExceptionHandler {
                 .collect(Collectors.joining("; "));
         return new ErrorResponse(new ErrorDetail(ErrorCode.VALIDATION_FAILED.name(), combinedMessage));
     }
+
+    @ResponseStatus(HttpStatus.UNAUTHORIZED)
+    @ExceptionHandler(InvalidCredentialsException.class)
+    public ErrorResponse handleInvalidCredentials(InvalidCredentialsException ex) {
+        return buildError(ErrorCode.INVALID_CREDENTIALS, ex);
+    }
+
+    @ResponseStatus(HttpStatus.UNAUTHORIZED)
+    @ExceptionHandler(InvalidRefreshTokenException.class)
+    public ErrorResponse handleInvalidRefreshToken(InvalidRefreshTokenException ex) {
+        return buildError(ErrorCode.INVALID_REFRESH_TOKEN, ex);
+    }
 }
